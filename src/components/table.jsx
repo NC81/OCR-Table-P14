@@ -1,27 +1,28 @@
 import { useState, useEffect } from 'react'
 import { mockState } from '../mockState'
 import {
-  sliceEmployeesListInChunks,
+  sliceListInChunks,
   convertIntegerInArray,
+  filterListBySearch,
 } from '../tools/format'
 import Row from './row'
 
 export default function Table() {
-  const [entries, setEntries] = useState('10')
+  const [entries, setEntries] = useState(10)
   const [numberOfPages, setNumberOfPages] = useState(1)
-  const [arrayOfChunks, setArrayOfChunks] = useState([])
   const [page, setPage] = useState(1)
+  const [list, setList] = useState(mockState)
+  const [chunksToDisplay, setChunksToDisplay] = useState([])
   console.log('entries', entries)
-  console.log('arrayOfChunks', arrayOfChunks)
+  console.log('chunksToDisplay', chunksToDisplay)
   console.log('page', page)
   console.log('numberOfPages', numberOfPages)
+  console.log('list', list)
 
   useEffect(() => {
-    setNumberOfPages(Math.ceil(mockState.length / entries))
-    setArrayOfChunks(
-      sliceEmployeesListInChunks(mockState, Number(entries), numberOfPages)
-    )
-  }, [entries, numberOfPages])
+    setNumberOfPages(Math.ceil(list.length / entries))
+    setChunksToDisplay(sliceListInChunks(list, entries, numberOfPages))
+  }, [list, entries, numberOfPages])
 
   return (
     <>
@@ -31,7 +32,7 @@ export default function Table() {
           name="employee-table_length"
           aria-controls="employee-table"
           className=""
-          onChange={(e) => setEntries(e.target.value)}
+          onChange={(e) => setEntries(Number(e.target.value))}
         >
           <option value="10">10</option>
           <option value="25">25</option>
@@ -39,6 +40,20 @@ export default function Table() {
           <option value="100">100</option>
         </select>{' '}
         entries
+      </label>
+      <label>
+        Search:
+        <input
+          type="search"
+          className=""
+          placeholder=""
+          aria-controls="employee-table"
+          onChange={(e) =>
+            e.target.value.length > 0
+              ? setList(filterListBySearch(mockState, e.target.value))
+              : setList(mockState)
+          }
+        ></input>
       </label>
       <table>
         <tbody>
@@ -53,16 +68,16 @@ export default function Table() {
             <th>State</th>
             <th>Zip Code</th>
           </tr>
-          {arrayOfChunks.length > 0 &&
-            arrayOfChunks[page - 1].map((row, index) => (
+          {chunksToDisplay.length > 0 &&
+            chunksToDisplay[page - 1].map((row, index) => (
               <Row data={row} key={`${row}-${index}`} />
             ))}
         </tbody>
       </table>
       <span>
         Showing {page * entries + 1 - entries} to{' '}
-        {page === numberOfPages ? mockState.length : page * entries} of{' '}
-        {mockState.length} entries
+        {page === numberOfPages ? list.length : page * entries} of {list.length}{' '}
+        entries
       </span>
       {numberOfPages > 1 && page > 1 && (
         <button onClick={() => setPage(page - 1)}>Précédent</button>

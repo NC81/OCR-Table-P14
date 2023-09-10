@@ -1,4 +1,4 @@
-export function sliceEmployeesListInChunks(mockState, entries, pages) {
+export function sliceListInChunks(mockState, entries, pages) {
   console.log('length', mockState.length)
   console.log('pages', pages)
   let arrayOfChunks = []
@@ -33,4 +33,14 @@ export function convertIntegerInArray(integer) {
   }
   console.log('arrayOfIntegers', arrayOfIntegers)
   return arrayOfIntegers
+}
+
+export function filterListBySearch(mockState, string) {
+  const filteredList = mockState.filter((obj) =>
+    Object.values(obj).some((ele) =>
+      ele.toLowerCase().includes(string.toLowerCase())
+    )
+  )
+  console.log('filteredList', filteredList)
+  return filteredList
 }
