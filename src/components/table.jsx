@@ -4,7 +4,9 @@ import {
   sliceListInChunks,
   convertIntegerInArray,
   filterListBySearch,
+  sortArrayOfObjects,
 } from '../tools/format'
+import sortingArrow from '../assets/sorting-arrowheads.png'
 import Row from './row'
 
 export default function Table() {
@@ -13,16 +15,52 @@ export default function Table() {
   const [page, setPage] = useState(1)
   const [list, setList] = useState(mockState)
   const [chunksToDisplay, setChunksToDisplay] = useState([])
-  console.log('entries', entries)
-  console.log('chunksToDisplay', chunksToDisplay)
-  console.log('page', page)
-  console.log('numberOfPages', numberOfPages)
-  console.log('list', list)
+  const [sort, setSort] = useState({
+    accessor: 'firstName',
+    direction: 'ascending',
+  })
+  // console.log('entries', entries)
+  // console.log('chunksToDisplay', chunksToDisplay)
+  // console.log('page', page)
+  // console.log('numberOfPages', numberOfPages)
+  // console.log('list', list)
+  // console.log('sort', sort)
+
+  function handleHeaderClick(header) {
+    console.log(header)
+    setSort({
+      accessor: header,
+      direction:
+        header === sort.accessor
+          ? sort.direction === 'ascending'
+            ? 'descending'
+            : 'ascending'
+          : 'ascending',
+    })
+  }
 
   useEffect(() => {
     setNumberOfPages(Math.ceil(list.length / entries))
-    setChunksToDisplay(sliceListInChunks(list, entries, numberOfPages))
-  }, [list, entries, numberOfPages])
+    setChunksToDisplay(
+      sliceListInChunks(
+        sortArrayOfObjects(list, sort.accessor, sort.direction),
+        entries,
+        numberOfPages
+      )
+    )
+  }, [list, entries, numberOfPages, sort.accessor, sort.direction])
+
+  const headers = [
+    { label: 'First Name', accessor: 'firstName' },
+    { label: 'Last Name', accessor: 'lastName' },
+    { label: 'Start Date', accessor: 'startDate' },
+    { label: 'Department', accessor: 'department' },
+    { label: 'Date of Birth', accessor: 'birthDate' },
+    { label: 'Street', accessor: 'street' },
+    { label: 'City', accessor: 'city' },
+    { label: 'State', accessor: 'state' },
+    { label: 'Zip Code', accessor: 'zip' },
+  ]
 
   return (
     <>
@@ -56,18 +94,30 @@ export default function Table() {
         ></input>
       </label>
       <table>
-        <tbody>
+        <thead>
           <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Start Date</th>
-            <th>Department</th>
-            <th>Date of Birth</th>
-            <th>Street</th>
-            <th>City</th>
-            <th>State</th>
-            <th>Zip Code</th>
+            {headers.map(({ label, accessor }, index) => (
+              <th
+                key={`${accessor}-${index}`}
+                onClick={() => {
+                  handleHeaderClick(accessor)
+                }}
+              >
+                <div>
+                  <span>{label}</span>
+                  {accessor === sort.accessor && (
+                    <img
+                      className={`sort-icon ${sort.direction}`}
+                      src={sortingArrow}
+                      alt=""
+                    ></img>
+                  )}
+                </div>
+              </th>
+            ))}
           </tr>
+        </thead>
+        <tbody>
           {chunksToDisplay.length > 0 &&
             chunksToDisplay[page - 1].map((row, index) => (
               <Row data={row} key={`${row}-${index}`} />

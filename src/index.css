@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.sort-icon {
+  width: 16px;
+}
+
+.ascending {
+  transform: rotate(180deg);
+}
