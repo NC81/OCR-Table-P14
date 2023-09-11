@@ -6,8 +6,8 @@ import {
   filterListBySearch,
   sortArrayOfObjects,
 } from '../tools/format'
-import sortingArrow from '../assets/sorting-arrowheads.png'
-import Row from './row'
+import sortingArrowOrder from '../assets/sort-arrow-order.png'
+import sortingArrowDisabled from '../assets/sort-arrow-disabled.png'
 
 export default function Table() {
   const [entries, setEntries] = useState(10)
@@ -27,7 +27,6 @@ export default function Table() {
   // console.log('sort', sort)
 
   function handleHeaderClick(header) {
-    console.log(header)
     setSort({
       accessor: header,
       direction:
@@ -63,36 +62,36 @@ export default function Table() {
   ]
 
   return (
-    <>
-      <label>
-        Show{' '}
-        <select
-          name="employee-table_length"
-          aria-controls="employee-table"
-          className=""
-          onChange={(e) => setEntries(Number(e.target.value))}
-        >
-          <option value="10">10</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-        </select>{' '}
-        entries
-      </label>
-      <label>
-        Search:
-        <input
-          type="search"
-          className=""
-          placeholder=""
-          aria-controls="employee-table"
-          onChange={(e) =>
-            e.target.value.length > 0
-              ? setList(filterListBySearch(mockState, e.target.value))
-              : setList(mockState)
-          }
-        ></input>
-      </label>
+    <main className="table-wrapper">
+      <div className="table-top">
+        <label>
+          Show{' '}
+          <select
+            name="employee-table_length"
+            aria-controls="employee-table"
+            className=""
+            onChange={(e) => setEntries(Number(e.target.value))}
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>{' '}
+          entries
+        </label>
+        <label>
+          Search:
+          <input
+            type="search"
+            aria-controls="employee-table"
+            onChange={(e) =>
+              e.target.value.length > 0
+                ? setList(filterListBySearch(mockState, e.target.value))
+                : setList(mockState)
+            }
+          ></input>
+        </label>
+      </div>
       <table>
         <thead>
           <tr>
@@ -103,14 +102,20 @@ export default function Table() {
                   handleHeaderClick(accessor)
                 }}
               >
-                <div>
+                <div className="table-header">
                   <span>{label}</span>
-                  {accessor === sort.accessor && (
+                  {accessor === sort.accessor ? (
                     <img
                       className={`sort-icon ${sort.direction}`}
-                      src={sortingArrow}
+                      src={sortingArrowOrder}
                       alt=""
-                    ></img>
+                    />
+                  ) : (
+                    <img
+                      className={`sort-icon`}
+                      src={sortingArrowDisabled}
+                      alt=""
+                    />
                   )}
                 </div>
               </th>
@@ -120,26 +125,47 @@ export default function Table() {
         <tbody>
           {chunksToDisplay.length > 0 &&
             chunksToDisplay[page - 1].map((row, index) => (
-              <Row data={row} key={`${row}-${index}`} />
+              <tr
+                className={index % 2 === 0 ? 'row-even' : ''}
+                key={`${index}`}
+              >
+                {headers.map(({ accessor }) => (
+                  <td
+                    className={sort.accessor === accessor ? 'sorted' : ''}
+                    key={`${accessor}`}
+                  >
+                    {row[accessor]}
+                  </td>
+                ))}
+              </tr>
             ))}
         </tbody>
       </table>
-      <span>
-        Showing {page * entries + 1 - entries} to{' '}
-        {page === numberOfPages ? list.length : page * entries} of {list.length}{' '}
-        entries
-      </span>
-      {numberOfPages > 1 && page > 1 && (
-        <button onClick={() => setPage(page - 1)}>Précédent</button>
-      )}
-      {convertIntegerInArray(numberOfPages).map((integer, index) => (
-        <button onClick={() => setPage(integer)} key={`${integer}-${index}`}>
-          {integer}
-        </button>
-      ))}
-      {page < numberOfPages && (
-        <button onClick={() => setPage(page + 1)}>Suivant</button>
-      )}
-    </>
+      <div className="table-bottom">
+        <span>
+          Showing {page * entries + 1 - entries} to{' '}
+          {page === numberOfPages ? list.length : page * entries} of{' '}
+          {list.length} entries
+        </span>
+        <div>
+          {numberOfPages > 1 && page > 1 && (
+            <button onClick={() => setPage(page - 1)}>Précédent</button>
+          )}
+          {numberOfPages > 1 &&
+            convertIntegerInArray(numberOfPages).map((integer, index) => (
+              <button
+                onClick={() => setPage(integer)}
+                className={page === index + 1 ? 'active-page' : ''}
+                key={`${integer}-${index}`}
+              >
+                {integer}
+              </button>
+            ))}
+          {page < numberOfPages && (
+            <button onClick={() => setPage(page + 1)}>Suivant</button>
+          )}
+        </div>
+      </div>
+    </main>
   )
 }
