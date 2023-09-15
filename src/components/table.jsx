@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import {
   sliceListInChunks,
   convertIntegerInArray,
@@ -161,4 +162,8 @@ export default function Table({ data }) {
       </div>
     </main>
   )
+}
+
+Table.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
 }
