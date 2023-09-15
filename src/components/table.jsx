@@ -18,6 +18,7 @@ export default function Table({ data }) {
   const [sort, setSort] = useState({
     key: 'firstName',
     direction: 'ascending',
+    nextDirection: 'descending',
   })
   // console.log('entries', entries)
   // console.log('chunksToDisplay', chunksToDisplay)
@@ -35,6 +36,8 @@ export default function Table({ data }) {
             ? 'descending'
             : 'ascending'
           : 'ascending',
+      nextDirection:
+        sort.direction === 'ascending' ? 'ascending' : 'descending',
     })
   }
 
@@ -63,8 +66,8 @@ export default function Table({ data }) {
         <header>
           Show{' '}
           <select
-            name="employee-table_length"
-            aria-controls="employee-table"
+            name="table-length"
+            aria-controls="table"
             className=""
             onChange={(e) => setEntries(Number(e.target.value))}
           >
@@ -76,10 +79,10 @@ export default function Table({ data }) {
           entries
         </header>
         <header>
-          Search:
+          <label>Search:</label>
           <input
             type="search"
-            aria-controls="employee-table"
+            aria-controls="table"
             onChange={(e) =>
               e.target.value.length > 0
                 ? setList(filterListBySearch(data, e.target.value))
@@ -88,15 +91,24 @@ export default function Table({ data }) {
           ></input>
         </header>
       </div>
-      <table>
+      <table id="table" role="grid" aria-describedby="table-info">
         <thead>
-          <tr>
+          <tr role="row">
             {columns.map(({ header, key }, index) => (
               <th
                 key={`${key}-${index}`}
                 onClick={() => {
                   handleHeaderClick(key)
                 }}
+                onKeyDown={(e) => {
+                  e.key === 'Enter' && handleHeaderClick(key)
+                }}
+                aria-label={`${header}: activate to sort column ${
+                  key === sort.key ? sort.nextDirection : sort.direction
+                } `}
+                aria-sort={key === sort.key ? sort.direction : 'none'}
+                aria-controls="table"
+                tabIndex="0"
               >
                 <div className="table-header">
                   <span>{header}</span>
@@ -109,7 +121,11 @@ export default function Table({ data }) {
                         ? sortingArrowOrder
                         : sortingArrowDisabled
                     }
-                    alt=""
+                    alt={
+                      key === sort.key
+                        ? `Sorted in ${sort.direction} order`
+                        : 'Sort'
+                    }
                   />
                 </div>
               </th>
@@ -122,6 +138,7 @@ export default function Table({ data }) {
               <tr
                 className={index % 2 === 0 ? 'row-even' : ''}
                 key={`${index}`}
+                role="row"
               >
                 {columns.map(({ key }) => (
                   <td
@@ -136,14 +153,16 @@ export default function Table({ data }) {
         </tbody>
       </table>
       <div className="table-bottom">
-        <span>
+        <span role="status" aria-live="polite" id="table-info">
           Showing {page * entries + 1 - entries} to{' '}
           {page === numberOfPages ? list.length : page * entries} of{' '}
           {list.length} entries
         </span>
         <div>
           {numberOfPages > 1 && page > 1 && (
-            <button onClick={() => setPage(page - 1)}>Précédent</button>
+            <button onClick={() => setPage(page - 1)} tabIndex="0">
+              Précédent
+            </button>
           )}
           {numberOfPages > 1 &&
             convertIntegerInArray(numberOfPages).map((integer, index) => (
@@ -151,12 +170,20 @@ export default function Table({ data }) {
                 onClick={() => setPage(integer)}
                 className={page === index + 1 ? 'active-page' : ''}
                 key={`${integer}-${index}`}
+                aria-controls="table"
+                tabIndex="0"
               >
                 {integer}
               </button>
             ))}
           {page < numberOfPages && (
-            <button onClick={() => setPage(page + 1)}>Suivant</button>
+            <button
+              onClick={() => setPage(page + 1)}
+              aria-controls="table"
+              tabIndex="0"
+            >
+              Suivant
+            </button>
           )}
         </div>
       </div>

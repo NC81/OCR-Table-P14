@@ -50,9 +50,9 @@ export function sortArrayOfObjects(array, key, direction) {
   })
 
   if (direction === 'descending') {
-    // console.log('descending', sortedArray.reverse())
+    // console.log('descending')
     return sortedArray.reverse()
   }
-  // console.log('ascending', sortedArray)
+  // console.log('ascending')
   return sortedArray
 }
