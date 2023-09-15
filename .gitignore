@@ -18,8 +18,9 @@
 .env.test.local
 .env.production.local
 
-# mockState
+# dev
 mockState.js
+page.jsx
 
 npm-debug.log*
 yarn-debug.log*

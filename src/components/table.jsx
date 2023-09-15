@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { mockState } from '../mockState'
 import {
   sliceListInChunks,
   convertIntegerInArray,
@@ -9,14 +8,14 @@ import {
 import sortingArrowOrder from '../assets/sort-arrow-order.png'
 import sortingArrowDisabled from '../assets/sort-arrow-disabled.png'
 
-export default function Table() {
+export default function Table({ data }) {
   const [entries, setEntries] = useState(10)
   const [numberOfPages, setNumberOfPages] = useState(1)
   const [page, setPage] = useState(1)
-  const [list, setList] = useState(mockState)
+  const [list, setList] = useState(data)
   const [chunksToDisplay, setChunksToDisplay] = useState([])
   const [sort, setSort] = useState({
-    accessor: 'firstName',
+    key: 'firstName',
     direction: 'ascending',
   })
   // console.log('entries', entries)
@@ -28,9 +27,9 @@ export default function Table() {
 
   function handleHeaderClick(header) {
     setSort({
-      accessor: header,
+      key: header,
       direction:
-        header === sort.accessor
+        header === sort.key
           ? sort.direction === 'ascending'
             ? 'descending'
             : 'ascending'
@@ -39,32 +38,28 @@ export default function Table() {
   }
 
   useEffect(() => {
+    const sortedList = sortArrayOfObjects(list, sort.key, sort.direction)
     setNumberOfPages(Math.ceil(list.length / entries))
-    setChunksToDisplay(
-      sliceListInChunks(
-        sortArrayOfObjects(list, sort.accessor, sort.direction),
-        entries,
-        numberOfPages
-      )
-    )
-  }, [list, entries, numberOfPages, sort.accessor, sort.direction])
+    const listOfChunks = sliceListInChunks(sortedList, entries, numberOfPages)
+    setChunksToDisplay(listOfChunks)
+  }, [list, entries, numberOfPages, sort.key, sort.direction])
 
-  const headers = [
-    { label: 'First Name', accessor: 'firstName' },
-    { label: 'Last Name', accessor: 'lastName' },
-    { label: 'Start Date', accessor: 'startDate' },
-    { label: 'Department', accessor: 'department' },
-    { label: 'Date of Birth', accessor: 'birthDate' },
-    { label: 'Street', accessor: 'street' },
-    { label: 'City', accessor: 'city' },
-    { label: 'State', accessor: 'state' },
-    { label: 'Zip Code', accessor: 'zip' },
+  const columns = [
+    { key: 'firstName', header: 'First Name' },
+    { key: 'lastName', header: 'Last Name' },
+    { key: 'startDate', header: 'Start Date' },
+    { key: 'department', header: 'Department' },
+    { key: 'birthDate', header: 'Date of Birth' },
+    { key: 'street', header: 'Street' },
+    { key: 'city', header: 'City' },
+    { key: 'state', header: 'State' },
+    { key: 'zip', header: 'Zip Code' },
   ]
 
   return (
     <main className="table-wrapper">
       <div className="table-top">
-        <label>
+        <header>
           Show{' '}
           <select
             name="employee-table_length"
@@ -78,45 +73,43 @@ export default function Table() {
             <option value="100">100</option>
           </select>{' '}
           entries
-        </label>
-        <label>
+        </header>
+        <header>
           Search:
           <input
             type="search"
             aria-controls="employee-table"
             onChange={(e) =>
               e.target.value.length > 0
-                ? setList(filterListBySearch(mockState, e.target.value))
-                : setList(mockState)
+                ? setList(filterListBySearch(data, e.target.value))
+                : setList(data)
             }
           ></input>
-        </label>
+        </header>
       </div>
       <table>
         <thead>
           <tr>
-            {headers.map(({ label, accessor }, index) => (
+            {columns.map(({ header, key }, index) => (
               <th
-                key={`${accessor}-${index}`}
+                key={`${key}-${index}`}
                 onClick={() => {
-                  handleHeaderClick(accessor)
+                  handleHeaderClick(key)
                 }}
               >
                 <div className="table-header">
-                  <span>{label}</span>
-                  {accessor === sort.accessor ? (
-                    <img
-                      className={`sort-icon ${sort.direction}`}
-                      src={sortingArrowOrder}
-                      alt=""
-                    />
-                  ) : (
-                    <img
-                      className={`sort-icon`}
-                      src={sortingArrowDisabled}
-                      alt=""
-                    />
-                  )}
+                  <span>{header}</span>
+                  <img
+                    className={`sort-icon ${
+                      key === sort.key ? sort.direction : ''
+                    }`}
+                    src={
+                      key === sort.key
+                        ? sortingArrowOrder
+                        : sortingArrowDisabled
+                    }
+                    alt=""
+                  />
                 </div>
               </th>
             ))}
@@ -129,12 +122,12 @@ export default function Table() {
                 className={index % 2 === 0 ? 'row-even' : ''}
                 key={`${index}`}
               >
-                {headers.map(({ accessor }) => (
+                {columns.map(({ key }) => (
                   <td
-                    className={sort.accessor === accessor ? 'sorted' : ''}
-                    key={`${accessor}`}
+                    className={sort.key === key ? 'sorted' : ''}
+                    key={`${key}`}
                   >
-                    {row[accessor]}
+                    {row[key]}
                   </td>
                 ))}
               </tr>

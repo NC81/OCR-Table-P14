@@ -1,15 +1,15 @@
-export function sliceListInChunks(mockState, entries, pages) {
+export function sliceListInChunks(array, entries, pages) {
+  console.log('entries', entries, 'pages', pages)
   let arrayOfChunks = []
-
   for (let i = 0; i < pages; i++) {
     if (i === 0) {
-      const firstArray = mockState.slice(0, entries)
+      const firstArray = array.slice(0, entries)
       arrayOfChunks.push(firstArray)
     } else if (i > 0 && i < pages - 1) {
-      const middleArray = mockState.slice(entries * i, entries * i + entries)
+      const middleArray = array.slice(entries * i, entries * i + entries)
       arrayOfChunks.push(middleArray)
     } else {
-      const lastArray = mockState.slice(entries * i, mockState.length)
+      const lastArray = array.slice(entries * i, array.length)
       arrayOfChunks.push(lastArray)
     }
   }
@@ -38,21 +38,21 @@ export function filterListBySearch(mockState, string) {
   return filteredList
 }
 
-export function sortArrayOfObjects(array, accessor, direction) {
-  const sortedArray = [...array].sort((a, b) => {
-    if (a[accessor] < b[accessor]) {
+export function sortArrayOfObjects(array, key, direction) {
+  const sortedArray = array.sort((a, b) => {
+    if (a[key] < b[key]) {
       return -1
     }
-    if (a[accessor] > b[accessor]) {
+    if (a[key] > b[key]) {
       return 1
     }
     return 0
   })
 
   if (direction === 'descending') {
-    console.log('descending', [...sortedArray].reverse())
-    return [...sortedArray].reverse()
+    // console.log('descending', sortedArray.reverse())
+    return sortedArray.reverse()
   }
-  console.log('ascending', sortedArray)
+  // console.log('ascending', sortedArray)
   return sortedArray
 }
