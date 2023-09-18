@@ -19,7 +19,8 @@
 .env.production.local
 
 # dev
-mockState.js
+mockList.js
+mockColumns.js
 page.jsx
 jquery
 test.html

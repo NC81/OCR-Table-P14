@@ -1,14 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-// import Table from './components/table'
-import Page from './components/page'
+import Table from './components/table'
+import { mockList } from './data/mockList'
+import { mockColumns } from './data/mockColumns'
+
 import reportWebVitals from './reportWebVitals'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
-    <Page />
+    <Table data={mockList} columns={mockColumns} />
   </React.StrictMode>
 )
 

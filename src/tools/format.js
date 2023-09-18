@@ -1,5 +1,5 @@
 export function sliceListInChunks(array, entries, pages) {
-  console.log('entries', entries, 'pages', pages)
+  // console.log('entries', entries, 'pages', pages)
   let arrayOfChunks = []
   for (let i = 0; i < pages; i++) {
     if (i === 0) {
@@ -13,7 +13,7 @@ export function sliceListInChunks(array, entries, pages) {
       arrayOfChunks.push(lastArray)
     }
   }
-  console.log('arrayOfChunks', arrayOfChunks)
+  // console.log('arrayOfChunks', arrayOfChunks)
   return arrayOfChunks
 }
 
@@ -34,7 +34,7 @@ export function filterListBySearch(mockState, string) {
       ele.toLowerCase().includes(string.toLowerCase())
     )
   )
-  console.log('filteredList', filteredList)
+  // console.log('filteredList', filteredList)
   return filteredList
 }
 

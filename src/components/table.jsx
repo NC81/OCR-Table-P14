@@ -9,17 +9,19 @@ import {
 import sortingArrowOrder from '../assets/sort-arrow-order.png'
 import sortingArrowDisabled from '../assets/sort-arrow-disabled.png'
 
-export default function Table({ data }) {
+export default function Table({ data, columns }) {
   const [entries, setEntries] = useState(10)
   const [numberOfPages, setNumberOfPages] = useState(1)
   const [page, setPage] = useState(1)
   const [list, setList] = useState(data)
   const [chunksToDisplay, setChunksToDisplay] = useState([])
+
   const [sort, setSort] = useState({
-    key: 'firstName',
+    key: columns[0].key,
     direction: 'ascending',
     nextDirection: 'descending',
   })
+
   // console.log('entries', entries)
   // console.log('chunksToDisplay', chunksToDisplay)
   // console.log('page', page)
@@ -48,31 +50,26 @@ export default function Table({ data }) {
     setChunksToDisplay(listOfChunks)
   }, [list, entries, numberOfPages, sort.key, sort.direction])
 
-  const columns = [
-    { key: 'firstName', header: 'First Name' },
-    { key: 'lastName', header: 'Last Name' },
-    { key: 'startDate', header: 'Start Date' },
-    { key: 'department', header: 'Department' },
-    { key: 'birthDate', header: 'Date of Birth' },
-    { key: 'street', header: 'Street' },
-    { key: 'city', header: 'City' },
-    { key: 'state', header: 'State' },
-    { key: 'zip', header: 'Zip Code' },
-  ]
-
   return (
-    <main className="table-wrapper">
+    <main data-testid="table" className="table-wrapper">
       <div className="table-top">
         <header>
           Show{' '}
           <select
+            id="entries"
             name="table-length"
+            aria-label="Select number of entries to display"
             aria-controls="table"
             className=""
             onChange={(e) => setEntries(Number(e.target.value))}
+            data-testid="select"
           >
-            <option value="10">10</option>
-            <option value="25">25</option>
+            <option data-testid="option-10" value="10">
+              10
+            </option>
+            <option data-testid="option-25" value="25">
+              25
+            </option>
             <option value="50">50</option>
             <option value="100">100</option>
           </select>{' '}
@@ -82,12 +79,14 @@ export default function Table({ data }) {
           <label>Search:</label>
           <input
             type="search"
+            aria-label="Type text to filter rows"
             aria-controls="table"
             onChange={(e) =>
               e.target.value.length > 0
                 ? setList(filterListBySearch(data, e.target.value))
                 : setList(data)
             }
+            data-testid="search-input"
           ></input>
         </header>
       </div>
@@ -103,12 +102,13 @@ export default function Table({ data }) {
                 onKeyDown={(e) => {
                   e.key === 'Enter' && handleHeaderClick(key)
                 }}
-                aria-label={`${header}: activate to sort column ${
+                aria-label={`${header} activate to sort column ${
                   key === sort.key ? sort.nextDirection : sort.direction
                 } `}
                 aria-sort={key === sort.key ? sort.direction : 'none'}
                 aria-controls="table"
                 tabIndex="0"
+                data-testid="head-column"
               >
                 <div className="table-header">
                   <span>{header}</span>
@@ -139,6 +139,7 @@ export default function Table({ data }) {
                 className={index % 2 === 0 ? 'row-even' : ''}
                 key={`${index}`}
                 role="row"
+                data-testid="row"
               >
                 {columns.map(({ key }) => (
                   <td
@@ -153,14 +154,24 @@ export default function Table({ data }) {
         </tbody>
       </table>
       <div className="table-bottom">
-        <span role="status" aria-live="polite" id="table-info">
+        <span
+          data-testid="table-info"
+          data-role="status"
+          aria-live="polite"
+          id="table-info"
+        >
           Showing {page * entries + 1 - entries} to{' '}
           {page === numberOfPages ? list.length : page * entries} of{' '}
           {list.length} entries
         </span>
         <div>
           {numberOfPages > 1 && page > 1 && (
-            <button onClick={() => setPage(page - 1)} tabIndex="0">
+            <button
+              onClick={() => setPage(page - 1)}
+              aria-label="previous page"
+              aria-controls="table"
+              tabIndex="0"
+            >
               Précédent
             </button>
           )}
@@ -168,10 +179,12 @@ export default function Table({ data }) {
             convertIntegerInArray(numberOfPages).map((integer, index) => (
               <button
                 onClick={() => setPage(integer)}
+                data-testid="page-button"
                 className={page === index + 1 ? 'active-page' : ''}
                 key={`${integer}-${index}`}
                 aria-controls="table"
                 tabIndex="0"
+                aria-current={page === index + 1 && 'page'}
               >
                 {integer}
               </button>
@@ -179,6 +192,7 @@ export default function Table({ data }) {
           {page < numberOfPages && (
             <button
               onClick={() => setPage(page + 1)}
+              aria-label="next page"
               aria-controls="table"
               tabIndex="0"
             >
@@ -193,4 +207,5 @@ export default function Table({ data }) {
 
 Table.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  columns: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
 }
