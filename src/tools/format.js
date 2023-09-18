@@ -39,6 +39,23 @@ export function filterListBySearch(mockState, string) {
 }
 
 export function sortArrayOfObjects(array, key, direction) {
+  if (key === 'startDate' || key === 'birthDate') {
+    const dateArray = array.map((el) => {
+      const newDate = new Date(el[key])
+      return { ...el, newDate: newDate }
+    })
+
+    const sortedDateArray = dateArray.sort((a, b) => a.newDate - b.newDate)
+    sortedDateArray.forEach((object) => {
+      delete object['newDate']
+    })
+
+    if (direction === 'descending') {
+      return sortedDateArray.reverse()
+    }
+    return sortedDateArray
+  }
+
   const sortedArray = array.sort((a, b) => {
     if (a[key] < b[key]) {
       return -1
