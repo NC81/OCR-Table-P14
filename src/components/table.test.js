@@ -2,21 +2,21 @@ import '@testing-library/jest-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mockList } from '../data/mockList'
-import { mockColumns } from '../data/mockColumns'
+import { columns } from '../data/columns'
 import { act } from 'react-dom/test-utils'
 import Table from './table'
 
 describe('As a user, when I see the table displayed', () => {
   it('should render all the headers', () => {
-    render(<Table data={mockList} columns={mockColumns} />)
+    render(<Table data={mockList} columns={columns} />)
     const propertiesNumber = Object.keys(mockList[0]).length
     const headColumns = screen.getAllByTestId('head-column')
     expect(headColumns.length).toBe(propertiesNumber)
-    expect(headColumns[0]).toHaveTextContent(mockColumns[0].header)
+    expect(headColumns[0]).toHaveTextContent(columns[0].header)
   })
 
   it('should render default number of rows with the corresponding info text', async () => {
-    render(<Table data={mockList} columns={mockColumns} />)
+    render(<Table data={mockList} columns={columns} />)
 
     const rows = screen.getAllByTestId('row')
     const optionsList = screen.getAllByRole('option')
@@ -25,12 +25,12 @@ describe('As a user, when I see the table displayed', () => {
     expect(optionsList.length).toBe(4)
     expect(firstOption.selected).toBe(true)
     expect(screen.getByTestId('table-info')).toHaveTextContent(
-      'Showing 1 to 10 of 14 entries'
+      'Showing 1 to 10 of 21 entries'
     )
   })
 
   it('should sort rows in ascending order by the first property', () => {
-    render(<Table data={mockList} columns={mockColumns} />)
+    render(<Table data={mockList} columns={columns} />)
 
     expect(
       screen.getAllByTestId('head-column')[0].getAttribute('aria-sort')
@@ -51,18 +51,18 @@ describe('As a user, when I see the table displayed', () => {
   })
 
   it('should render page buttons', async () => {
-    render(<Table data={mockList} columns={mockColumns} />)
+    render(<Table data={mockList} columns={columns} />)
 
     const buttons = screen.getAllByTestId('page-button')
     const ariaCurrentFirstButton = buttons[0].getAttribute('aria-current')
-    expect(buttons.length).toBe(2)
+    expect(buttons.length).toBe(3)
     expect(ariaCurrentFirstButton).toBe('page')
   })
 
   describe('When I click on the first header', () => {
     it('should sort rows in descending order', async () => {
       const user = userEvent.setup()
-      render(<Table data={mockList} columns={mockColumns} />)
+      render(<Table data={mockList} columns={columns} />)
 
       user.click(screen.getAllByTestId('head-column')[0])
       await waitFor(() =>
@@ -87,7 +87,7 @@ describe('As a user, when I see the table displayed', () => {
   describe('when I select new entries value', () => {
     it('should render corresponding number of rows and update info text', async () => {
       const user = userEvent.setup()
-      render(<Table data={mockList} columns={mockColumns} />)
+      render(<Table data={mockList} columns={columns} />)
 
       const select = screen.getByTestId('select')
       const secondOption = screen.getByTestId('option-25')
@@ -100,32 +100,67 @@ describe('As a user, when I see the table displayed', () => {
       )
 
       expect(screen.getByTestId('table-info')).toHaveTextContent(
-        'Showing 1 to 14 of 14 entries'
+        'Showing 1 to 21 of 21 entries'
       )
     })
   })
 
-  describe('when I click on a page button', () => {
+  describe('when I click on a page button which renders a number', () => {
     it('should render the correct shunk of data and update info text', async () => {
       const user = userEvent.setup()
-      render(<Table data={mockList} columns={mockColumns} />)
-
-      const buttons = screen.getAllByTestId('page-button')
+      render(<Table data={mockList} columns={columns} />)
 
       const firstOption = screen.getByTestId('option-10')
       expect(firstOption.selected).toBe(true)
-      const remainingRowsToRender = mockList.length - firstOption.value
+      const rowsToRenderinThirdPage = mockList.length - firstOption.value * 2
 
-      user.click(buttons[1])
+      const buttons = screen.getAllByTestId('page-button')
+      expect(buttons[2]).toHaveTextContent('3')
+
+      user.click(buttons[2])
       await waitFor(() =>
-        expect(screen.getAllByTestId('row').length).toBe(remainingRowsToRender)
+        expect(screen.getAllByTestId('row').length).toBe(
+          rowsToRenderinThirdPage
+        )
       )
 
-      const ariaCurrentSecondButton = buttons[1].getAttribute('aria-current')
+      const ariaCurrentSecondButton = buttons[2].getAttribute('aria-current')
       expect(ariaCurrentSecondButton).toBe('page')
 
       expect(screen.getByTestId('table-info')).toHaveTextContent(
-        'Showing 11 to 14 of 14 entries'
+        'Showing 21 to 21 of 21 entries'
+      )
+    })
+  })
+
+  describe('when I click on a page button which renders previous or next', () => {
+    it('should render the correct shunk of data and update info text', async () => {
+      const user = userEvent.setup()
+      render(<Table data={mockList} columns={columns} />)
+
+      const firstOption = screen.getByTestId('option-10')
+      expect(firstOption.selected).toBe(true)
+
+      let buttons = screen.getAllByTestId('previous-next-button')
+      expect(buttons[0]).toHaveTextContent('Next')
+
+      user.click(buttons[0])
+      await waitFor(() => expect(screen.getAllByTestId('row').length).toBe(10))
+      await waitFor(() =>
+        expect(screen.getByTestId('table-info')).toHaveTextContent(
+          'Showing 11 to 20 of 21 entries'
+        )
+      )
+
+      buttons = screen.getAllByTestId('previous-next-button')
+      expect(buttons[0]).toHaveTextContent('Previous')
+
+      user.click(buttons[0])
+      await waitFor(() => expect(screen.getAllByTestId('row').length).toBe(10))
+      await waitFor(() =>
+        expect(screen.getByTestId('table-info')).toHaveTextContent(
+          'Showing 1 to 10 of 21 entries'
+        )
       )
     })
   })
@@ -133,7 +168,7 @@ describe('As a user, when I see the table displayed', () => {
   describe('When I type more than 1 character in search input', () => {
     it('should filter rows accordingly', async () => {
       const user = userEvent.setup()
-      render(<Table data={mockList} columns={mockColumns} />)
+      render(<Table data={mockList} columns={columns} />)
 
       const input = screen.getByTestId('search-input')
       const stringToSearch = 'chris'

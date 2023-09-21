@@ -41,6 +41,7 @@ export default function Table({ data, columns }) {
       nextDirection:
         sort.direction === 'ascending' ? 'ascending' : 'descending',
     })
+    page > 1 && setPage(1)
   }
 
   useEffect(() => {
@@ -53,16 +54,16 @@ export default function Table({ data, columns }) {
   return (
     <main data-testid="table" className="table-wrapper">
       <div className="table-top">
-        <header>
-          Show{' '}
+        <div>
+          <label>Entries to display:</label>
           <select
             id="entries"
             name="table-length"
             aria-label="Select number of entries to display"
             aria-controls="table"
-            className=""
             onChange={(e) => setEntries(Number(e.target.value))}
             data-testid="select"
+            className="entries-select"
           >
             <option data-testid="option-10" value="10">
               10
@@ -73,9 +74,8 @@ export default function Table({ data, columns }) {
             <option value="50">50</option>
             <option value="100">100</option>
           </select>{' '}
-          entries
-        </header>
-        <header>
+        </div>
+        <div>
           <label>Search:</label>
           <input
             type="search"
@@ -87,8 +87,9 @@ export default function Table({ data, columns }) {
                 : setList(data)
             }
             data-testid="search-input"
+            className="search-input"
           ></input>
-        </header>
+        </div>
       </div>
       <table id="table" role="grid" aria-describedby="table-info">
         <thead>
@@ -159,6 +160,7 @@ export default function Table({ data, columns }) {
           data-role="status"
           aria-live="polite"
           id="table-info"
+          className="table-info"
         >
           Showing {page * entries + 1 - entries} to{' '}
           {page === numberOfPages ? list.length : page * entries} of{' '}
@@ -171,8 +173,10 @@ export default function Table({ data, columns }) {
               aria-label="previous page"
               aria-controls="table"
               tabIndex="0"
+              data-testid="previous-next-button"
+              className="previous-next-button"
             >
-              Précédent
+              Previous
             </button>
           )}
           {numberOfPages > 1 &&
@@ -195,8 +199,10 @@ export default function Table({ data, columns }) {
               aria-label="next page"
               aria-controls="table"
               tabIndex="0"
+              data-testid="previous-next-button"
+              className="previous-next-button"
             >
-              Suivant
+              Next
             </button>
           )}
         </div>
