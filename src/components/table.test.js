@@ -2,7 +2,7 @@ import '@testing-library/jest-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mockList } from '../data/mockList'
-import { columns } from '../data/columns'
+import { columns } from '../columns'
 import { act } from 'react-dom/test-utils'
 import Table from './table'
 

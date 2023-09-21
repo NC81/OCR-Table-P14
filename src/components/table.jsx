@@ -3,30 +3,27 @@ import PropTypes from 'prop-types'
 import {
   sliceListInChunks,
   convertIntegerInArray,
-  filterListBySearch,
-  sortArrayOfObjects,
+  filterList,
+  sortList,
 } from '../tools/format'
 import sortingArrowOrder from '../assets/sort-arrow-order.png'
 import sortingArrowDisabled from '../assets/sort-arrow-disabled.png'
 
 export default function Table({ data, columns }) {
   const [entries, setEntries] = useState(10)
-  const [numberOfPages, setNumberOfPages] = useState(1)
   const [page, setPage] = useState(1)
-  const [list, setList] = useState(data)
+  const [unsortedList, setUnsortedList] = useState(data)
   const [chunksToDisplay, setChunksToDisplay] = useState([])
-
   const [sort, setSort] = useState({
     key: columns[0].key,
     direction: 'ascending',
     nextDirection: 'descending',
   })
-
   // console.log('entries', entries)
   // console.log('chunksToDisplay', chunksToDisplay)
   // console.log('page', page)
-  // console.log('numberOfPages', numberOfPages)
-  // console.log('list', list)
+  // console.log('numberOfPages', chunksToDisplay.length)
+  // console.log('unsortedList', unsortedList)
   // console.log('sort', sort)
 
   function handleHeaderClick(header) {
@@ -41,15 +38,14 @@ export default function Table({ data, columns }) {
       nextDirection:
         sort.direction === 'ascending' ? 'ascending' : 'descending',
     })
-    page > 1 && setPage(1)
   }
 
   useEffect(() => {
-    const sortedList = sortArrayOfObjects(list, sort.key, sort.direction)
-    setNumberOfPages(Math.ceil(list.length / entries))
-    const listOfChunks = sliceListInChunks(sortedList, entries, numberOfPages)
-    setChunksToDisplay(listOfChunks)
-  }, [list, entries, numberOfPages, sort.key, sort.direction])
+    const sortedList = sortList(unsortedList, sort.key, sort.direction)
+    const chunks = sliceListInChunks(sortedList, entries)
+    setPage(1)
+    setChunksToDisplay(chunks)
+  }, [unsortedList, entries, sort.key, sort.direction])
 
   return (
     <main data-testid="table" className="table-wrapper">
@@ -83,8 +79,8 @@ export default function Table({ data, columns }) {
             aria-controls="table"
             onChange={(e) =>
               e.target.value.length > 0
-                ? setList(filterListBySearch(data, e.target.value))
-                : setList(data)
+                ? setUnsortedList(filterList(data, e.target.value))
+                : setUnsortedList(data)
             }
             data-testid="search-input"
             className="search-input"
@@ -163,11 +159,13 @@ export default function Table({ data, columns }) {
           className="table-info"
         >
           Showing {page * entries + 1 - entries} to{' '}
-          {page === numberOfPages ? list.length : page * entries} of{' '}
-          {list.length} entries
+          {page === chunksToDisplay.length
+            ? unsortedList.length
+            : page * entries}{' '}
+          of {unsortedList.length} entries
         </span>
         <div>
-          {numberOfPages > 1 && page > 1 && (
+          {chunksToDisplay.length > 1 && page > 1 && (
             <button
               onClick={() => setPage(page - 1)}
               aria-label="previous page"
@@ -179,21 +177,23 @@ export default function Table({ data, columns }) {
               Previous
             </button>
           )}
-          {numberOfPages > 1 &&
-            convertIntegerInArray(numberOfPages).map((integer, index) => (
-              <button
-                onClick={() => setPage(integer)}
-                data-testid="page-button"
-                className={page === index + 1 ? 'active-page' : ''}
-                key={`${integer}-${index}`}
-                aria-controls="table"
-                tabIndex="0"
-                aria-current={page === index + 1 && 'page'}
-              >
-                {integer}
-              </button>
-            ))}
-          {page < numberOfPages && (
+          {chunksToDisplay.length > 1 &&
+            convertIntegerInArray(chunksToDisplay.length).map(
+              (integer, index) => (
+                <button
+                  onClick={() => setPage(integer)}
+                  data-testid="page-button"
+                  className={page === index + 1 ? 'active-page' : ''}
+                  key={`${integer}-${index}`}
+                  aria-controls="table"
+                  tabIndex="0"
+                  aria-current={page === index + 1 && 'page'}
+                >
+                  {integer}
+                </button>
+              )
+            )}
+          {page < chunksToDisplay.length && (
             <button
               onClick={() => setPage(page + 1)}
               aria-label="next page"
