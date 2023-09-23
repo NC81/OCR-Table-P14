@@ -108,7 +108,7 @@ export default function Table({ data, columns }) {
                 data-testid="head-column"
               >
                 <div className="table-header">
-                  <span>{header}</span>
+                  <span data-testid="header-title">{header}</span>
                   <img
                     className={`sort-icon ${
                       key === sort.key ? sort.direction : ''

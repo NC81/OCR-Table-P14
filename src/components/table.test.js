@@ -6,13 +6,22 @@ import { columns } from '../columns'
 import { act } from 'react-dom/test-utils'
 import Table from './table'
 
-describe('As a user, when I see the table displayed', () => {
+describe('Given I am a user with the table displayed', () => {
   it('should render all the headers', () => {
     render(<Table data={mockList} columns={columns} />)
     const propertiesNumber = Object.keys(mockList[0]).length
     const headColumns = screen.getAllByTestId('head-column')
+    const headers = screen.getAllByTestId('header-title')
     expect(headColumns.length).toBe(propertiesNumber)
-    expect(headColumns[0]).toHaveTextContent(columns[0].header)
+    expect(headColumns.length).toBe(headers.length)
+
+    const arrayFromDOM = headers.map((el) => {
+      return el.textContent
+    })
+    const arrayFromData = columns.map((el) => {
+      return el.header
+    })
+    expect(arrayFromDOM).toEqual(arrayFromData)
   })
 
   it('should render default number of rows with the corresponding info text', async () => {
@@ -59,7 +68,7 @@ describe('As a user, when I see the table displayed', () => {
     expect(ariaCurrentFirstButton).toBe('page')
   })
 
-  describe('When I click on the first header', () => {
+  describe('when I click on the first header', () => {
     it('should sort rows in descending order', async () => {
       const user = userEvent.setup()
       render(<Table data={mockList} columns={columns} />)
@@ -105,7 +114,7 @@ describe('As a user, when I see the table displayed', () => {
     })
   })
 
-  describe('when I click on a page button which renders a number', () => {
+  describe('when I click on a page button rendering a number', () => {
     it('should render the correct shunk of data and update info text', async () => {
       const user = userEvent.setup()
       render(<Table data={mockList} columns={columns} />)
@@ -133,7 +142,7 @@ describe('As a user, when I see the table displayed', () => {
     })
   })
 
-  describe('when I click on a page button which renders previous or next', () => {
+  describe('when I click on a page button rendering previous or next', () => {
     it('should render the correct shunk of data and update info text', async () => {
       const user = userEvent.setup()
       render(<Table data={mockList} columns={columns} />)
@@ -165,7 +174,7 @@ describe('As a user, when I see the table displayed', () => {
     })
   })
 
-  describe('When I type more than 1 character in search input', () => {
+  describe('when I type more than 1 character in search input', () => {
     it('should filter rows accordingly', async () => {
       const user = userEvent.setup()
       render(<Table data={mockList} columns={columns} />)
@@ -186,7 +195,7 @@ describe('As a user, when I see the table displayed', () => {
 
       const rows = screen.getAllByTestId('row')
       rows.forEach((row) => {
-        expect(row).toHaveTextContent('Chris')
+        expect(row).toHaveTextContent(/chris/i)
       })
     })
   })
