@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Table from './components/table'
-import { mockList } from './data/mockList'
+import { mockList } from './mock/mockList'
 import { columns } from './columns'
 import './table.css'
 

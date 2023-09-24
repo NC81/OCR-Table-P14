@@ -6,72 +6,66 @@ import {
   convertIntegerInArray,
 } from './format'
 
-describe('Given I want sortList() to sort an array by properties', () => {
-  const arrayToSort = [
-    { city: 'New York', state: 'NY' },
-    { city: 'Chicago', state: 'IL' },
-    { city: 'Los Angeles', state: 'CA' },
-  ]
+const arrayToTest = [
+  { firstName: 'Feargus', birthDate: '04/19/1970' },
+  { firstName: 'Chris', birthDate: '05/27/1968' },
+  { firstName: 'Swen', birthDate: '05/30/1972' },
+  { firstName: 'Todd', birthDate: '10/06/1970' },
+  { firstName: 'Brian', birthDate: '12/15/1962' },
+  { firstName: 'Frederick', birthDate: '05/15/1966' },
+]
 
-  it('should correctly sort in ascending order', () => {
-    const sortedList = sortList(arrayToSort, 'city', 'ascending')
+describe('Given I want sortList() to sort an array by object properties', () => {
+  it('should correctly sort text in ascending order', () => {
+    const sortedList = sortList([...arrayToTest], 'firstName', 'ascending')
     const expectedArray = [
-      { city: 'Chicago', state: 'IL' },
-      { city: 'Los Angeles', state: 'CA' },
-      { city: 'New York', state: 'NY' },
+      { firstName: 'Brian', birthDate: '12/15/1962' },
+      { firstName: 'Chris', birthDate: '05/27/1968' },
+      { firstName: 'Feargus', birthDate: '04/19/1970' },
+      { firstName: 'Frederick', birthDate: '05/15/1966' },
+      { firstName: 'Swen', birthDate: '05/30/1972' },
+      { firstName: 'Todd', birthDate: '10/06/1970' },
     ]
     expect(sortedList).toEqual(expectedArray)
   })
 
-  it('should correctly sort in descending order', () => {
-    const sortedList = sortList(arrayToSort, 'city', 'descending')
+  it('should correctly sort date in descending order', () => {
+    const sortedList = sortList([...arrayToTest], 'birthDate', 'descending')
     const expectedArray = [
-      { city: 'New York', state: 'NY' },
-      { city: 'Los Angeles', state: 'CA' },
-      { city: 'Chicago', state: 'IL' },
+      { firstName: 'Swen', birthDate: '05/30/1972' },
+      { firstName: 'Todd', birthDate: '10/06/1970' },
+      { firstName: 'Feargus', birthDate: '04/19/1970' },
+      { firstName: 'Chris', birthDate: '05/27/1968' },
+      { firstName: 'Frederick', birthDate: '05/15/1966' },
+      { firstName: 'Brian', birthDate: '12/15/1962' },
     ]
     expect(sortedList).toEqual(expectedArray)
   })
 })
 
-describe('Given I want filterList() to filter an array by string', () => {
-  const arrayToFilter = [
-    { firstName: 'Chris', LastName: 'Roberts' },
-    { firstName: 'Swen', LastName: 'Vincke' },
-    { firstName: 'Brian', LastName: 'Fargo' },
-  ]
-
+describe('Given I want filterList() to filter an array by case insensitive string', () => {
   it('should only keep objects containing the string', () => {
-    const filteredList = filterList(arrayToFilter, 'SW')
-    const expectedArray = [{ firstName: 'Swen', LastName: 'Vincke' }]
+    const filteredList = filterList(arrayToTest, 'SW')
+    const expectedArray = [{ firstName: 'Swen', birthDate: '05/30/1972' }]
     expect(filteredList).toEqual(expectedArray)
   })
 })
 
 describe('Given I want sliceListInChunks() to slice my list in chunks of x elements', () => {
-  const arrayToSlice = [
-    { city: 'New York', state: 'NY' },
-    { city: 'Chicago', state: 'IL' },
-    { city: 'Los Angeles', state: 'CA' },
-    { city: 'New Orleans', state: 'LA' },
-    { city: 'Washington ', state: 'WA' },
-    { city: 'Nashville', state: 'TN' },
-  ]
-
   it('should create an array of chunks accordingly', () => {
-    const chunks = sliceListInChunks(arrayToSlice, 2)
+    const chunks = sliceListInChunks(arrayToTest, 2)
     const expectedArray = [
       [
-        { city: 'New York', state: 'NY' },
-        { city: 'Chicago', state: 'IL' },
+        { firstName: 'Feargus', birthDate: '04/19/1970' },
+        { firstName: 'Chris', birthDate: '05/27/1968' },
       ],
       [
-        { city: 'Los Angeles', state: 'CA' },
-        { city: 'New Orleans', state: 'LA' },
+        { firstName: 'Swen', birthDate: '05/30/1972' },
+        { firstName: 'Todd', birthDate: '10/06/1970' },
       ],
       [
-        { city: 'Washington ', state: 'WA' },
-        { city: 'Nashville', state: 'TN' },
+        { firstName: 'Brian', birthDate: '12/15/1962' },
+        { firstName: 'Frederick', birthDate: '05/15/1966' },
       ],
     ]
     expect(chunks).toEqual(expectedArray)

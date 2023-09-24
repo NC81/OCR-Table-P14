@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { mockList } from '../data/mockList'
+import { mockList } from '../mock/mockList'
+import { sortList, sliceListInChunks, filterList } from '../tools/format'
 import { columns } from '../columns'
 import { act } from 'react-dom/test-utils'
 import Table from './table'
@@ -9,19 +10,19 @@ import Table from './table'
 describe('Given I am a user with the table displayed', () => {
   it('should render all the headers', () => {
     render(<Table data={mockList} columns={columns} />)
+
     const propertiesNumber = Object.keys(mockList[0]).length
     const headColumns = screen.getAllByTestId('head-column')
-    const headers = screen.getAllByTestId('header-title')
     expect(headColumns.length).toBe(propertiesNumber)
-    expect(headColumns.length).toBe(headers.length)
 
-    const arrayFromDOM = headers.map((el) => {
+    const headerTitleContainers = screen.getAllByTestId('header-title')
+    const renderedHeaders = headerTitleContainers.map((el) => {
       return el.textContent
     })
-    const arrayFromData = columns.map((el) => {
+    const dataHeaders = columns.map((el) => {
       return el.header
     })
-    expect(arrayFromDOM).toEqual(arrayFromData)
+    expect(renderedHeaders).toEqual(dataHeaders)
   })
 
   it('should render default number of rows with the corresponding info text', async () => {
@@ -49,14 +50,18 @@ describe('Given I am a user with the table displayed', () => {
     const order = headColumns[0].getAttribute('aria-sort')
     expect(order).toBe('ascending')
 
-    const sortedList = mockList.sort((a, b) =>
-      a.firstName < b.firstName ? -1 : 1
-    )
+    const sortedList = sortList(mockList, 'firstName', 'ascending')
+    const chunks = sliceListInChunks(sortedList, 10)
+    const firstChunkFirstNames = chunks[0].map((el) => {
+      return el.firstName
+    })
 
-    const firstNameFromSortedList = sortedList[0].firstName
-    expect(screen.getAllByTestId('row')[0]).toHaveTextContent(
-      firstNameFromSortedList
-    )
+    const firstNameContainers = screen.getAllByTestId('cell-firstName')
+    const renderedFirstNames = firstNameContainers.map((el) => {
+      return el.textContent
+    })
+
+    expect(renderedFirstNames).toEqual(firstChunkFirstNames)
   })
 
   it('should render page buttons', async () => {
@@ -68,7 +73,7 @@ describe('Given I am a user with the table displayed', () => {
     expect(ariaCurrentFirstButton).toBe('page')
   })
 
-  describe('when I click on the first header', () => {
+  describe('when I click on the first header sorting in ascending order', () => {
     it('should sort rows in descending order', async () => {
       const user = userEvent.setup()
       render(<Table data={mockList} columns={columns} />)
@@ -80,15 +85,18 @@ describe('Given I am a user with the table displayed', () => {
         ).toBe('descending')
       )
 
-      const sortedList = mockList
-        .sort((a, b) => (a.firstName < b.firstName ? -1 : 1))
-        .reverse()
+      const sortedList = sortList(mockList, 'firstName', 'descending')
+      const chunks = sliceListInChunks(sortedList, 10)
+      const firstChunkFirstNames = chunks[0].map((el) => {
+        return el.firstName
+      })
 
-      const firstNameFromSortedReverseList = sortedList[0].firstName
       await waitFor(() =>
-        expect(screen.getAllByTestId('row')[0]).toHaveTextContent(
-          firstNameFromSortedReverseList
-        )
+        expect(
+          screen.getAllByTestId('cell-firstName').map((el) => {
+            return el.textContent
+          })
+        ).toEqual(firstChunkFirstNames)
       )
     })
   })
@@ -114,27 +122,30 @@ describe('Given I am a user with the table displayed', () => {
     })
   })
 
-  describe('when I click on a page button rendering a number', () => {
+  describe('when I click on the last page numbered button', () => {
     it('should render the correct shunk of data and update info text', async () => {
       const user = userEvent.setup()
       render(<Table data={mockList} columns={columns} />)
 
-      const firstOption = screen.getByTestId('option-10')
-      expect(firstOption.selected).toBe(true)
-      const rowsToRenderinThirdPage = mockList.length - firstOption.value * 2
+      const sortedList = sortList(mockList, 'firstName', 'ascending')
+      const chunks = sliceListInChunks(sortedList, 10)
+      const lastChunkCities = chunks[chunks.length - 1].map((el) => {
+        return el.city
+      })
 
       const buttons = screen.getAllByTestId('page-button')
-      expect(buttons[2]).toHaveTextContent('3')
-
-      user.click(buttons[2])
+      const lastButton = buttons[buttons.length - 1]
+      user.click(lastButton)
       await waitFor(() =>
-        expect(screen.getAllByTestId('row').length).toBe(
-          rowsToRenderinThirdPage
-        )
+        expect(
+          screen.getAllByTestId('cell-city').map((el) => {
+            return el.textContent
+          })
+        ).toEqual(lastChunkCities)
       )
 
-      const ariaCurrentSecondButton = buttons[2].getAttribute('aria-current')
-      expect(ariaCurrentSecondButton).toBe('page')
+      const ariaCurrentLastButton = lastButton.getAttribute('aria-current')
+      expect(ariaCurrentLastButton).toBe('page')
 
       expect(screen.getByTestId('table-info')).toHaveTextContent(
         'Showing 21 to 21 of 21 entries'
@@ -142,34 +153,46 @@ describe('Given I am a user with the table displayed', () => {
     })
   })
 
-  describe('when I click on a page button rendering previous or next', () => {
+  describe('when I click on next then on previous page buttons', () => {
     it('should render the correct shunk of data and update info text', async () => {
       const user = userEvent.setup()
       render(<Table data={mockList} columns={columns} />)
 
-      const firstOption = screen.getByTestId('option-10')
-      expect(firstOption.selected).toBe(true)
+      const sortedList = sortList(mockList, 'firstName', 'ascending')
+      const chunks = sliceListInChunks(sortedList, 10)
+      const nextChunkBirthDates = chunks[1].map((el) => {
+        return el.birthDate
+      })
 
-      let buttons = screen.getAllByTestId('previous-next-button')
-      expect(buttons[0]).toHaveTextContent('Next')
-
-      user.click(buttons[0])
-      await waitFor(() => expect(screen.getAllByTestId('row').length).toBe(10))
+      const nextButton = screen.getByTestId('next-button')
+      user.click(nextButton)
       await waitFor(() =>
-        expect(screen.getByTestId('table-info')).toHaveTextContent(
-          'Showing 11 to 20 of 21 entries'
-        )
+        expect(
+          screen.getAllByTestId('cell-birthDate').map((el) => {
+            return el.textContent
+          })
+        ).toEqual(nextChunkBirthDates)
       )
 
-      buttons = screen.getAllByTestId('previous-next-button')
-      expect(buttons[0]).toHaveTextContent('Previous')
+      expect(screen.getByTestId('table-info')).toHaveTextContent(
+        'Showing 11 to 20 of 21 entries'
+      )
 
-      user.click(buttons[0])
-      await waitFor(() => expect(screen.getAllByTestId('row').length).toBe(10))
+      const previousChunkStates = chunks[0].map((el) => {
+        return el.state
+      })
+      const previousButton = screen.getByTestId('previous-button')
+      user.click(previousButton)
       await waitFor(() =>
-        expect(screen.getByTestId('table-info')).toHaveTextContent(
-          'Showing 1 to 10 of 21 entries'
-        )
+        expect(
+          screen.getAllByTestId('cell-state').map((el) => {
+            return el.textContent
+          })
+        ).toEqual(previousChunkStates)
+      )
+
+      expect(screen.getByTestId('table-info')).toHaveTextContent(
+        'Showing 1 to 10 of 21 entries'
       )
     })
   })
@@ -182,11 +205,7 @@ describe('Given I am a user with the table displayed', () => {
       const input = screen.getByTestId('search-input')
       const stringToSearch = 'chris'
 
-      const filteredList = mockList.filter((obj) =>
-        Object.values(obj).some((ele) =>
-          ele.toLowerCase().includes(stringToSearch.toLowerCase())
-        )
-      )
+      const filteredList = filterList(mockList, stringToSearch)
 
       user.type(input, stringToSearch)
       await waitFor(() =>

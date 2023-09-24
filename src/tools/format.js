@@ -1,7 +1,23 @@
 /**
- * Sort original list in ascending/descending direction by property
+ * Filter original list by string typed in search input
  * @param { Array } list Original array of objects passed as prop to Table component
- * @param { String } key Key defines objects key whose values are compared
+ * @param { String } string String to be found in objects
+ * @returns { Array } Filtered array
+ */
+export function filterList(list, string) {
+  const filteredList = list.filter((obj) =>
+    Object.values(obj).some((ele) =>
+      ele.toLowerCase().includes(string.toLowerCase())
+    )
+  )
+  // console.log('filteredList', filteredList)
+  return filteredList
+}
+
+/**
+ * Sort list in ascending/descending direction by properties
+ * @param { Array } list Array of objects representing rows
+ * @param { String } key Object key whose value is compared
  * @param { String } direction Can be "ascending" or "descending"
  * @returns { Array } Sorted array
  */
@@ -41,25 +57,9 @@ export function sortList(list, key, direction) {
 }
 
 /**
- * Filter original list by string typed in search input
- * @param { Array } list Original array of objects passed as prop to Table component
- * @param { String } string String to be found in objects
- * @returns { Array } Filtered array
- */
-export function filterList(list, string) {
-  const filteredList = list.filter((obj) =>
-    Object.values(obj).some((ele) =>
-      ele.toLowerCase().includes(string.toLowerCase())
-    )
-  )
-  // console.log('filteredList', filteredList)
-  return filteredList
-}
-
-/**
- * Slice list in chunks representing pages
- * @param { Array } list Array of objects
- * @param { Integer } entries Number representing rows to render on each page
+ * Slice list in chunks representing pages of desired number of entries
+ * @param { Array } list Array of objects representing rows
+ * @param { Integer } entries Number of rows to render on each page
  * @returns { Array } Array of chunks to be rendered, one per page
  */
 export function sliceListInChunks(list, entries) {
@@ -83,7 +83,7 @@ export function sliceListInChunks(list, entries) {
 }
 
 /**
- * Create an array of elements to render page buttons accordingly
+ * Create an array whose length corresponds to the number of desired page buttons
  * @param { Integer } integer Number of chunks representing page buttons to render
  * @returns { Array } Array whose length equals the integer
  */

@@ -17,9 +17,9 @@ body {
 }
 
 .table-wrapper {
-  width: 920px;
   background-color: #efeee8;
-  margin: 30px auto 0;
+  padding: 30px 40px;
+  box-shadow: 0px 1px 8px 0px rgba(99, 99, 99, 0.2);
 }
 
 table {
@@ -38,6 +38,7 @@ tr {
 }
 
 .table-header span {
+  color: #616161;
   margin-right: 3px;
 }
 

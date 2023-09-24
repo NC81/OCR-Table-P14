@@ -48,12 +48,12 @@ export default function Table({ data, columns }) {
   }, [unsortedList, entries, sort.key, sort.direction])
 
   return (
-    <main data-testid="table" className="table-wrapper">
+    <div data-testid="table" className="table-wrapper">
       <div className="table-top">
         <div>
-          <label>Entries to display:</label>
+          <label htmlFor="entries-input">Entries to display:</label>
           <select
-            id="entries"
+            id="entries-input"
             name="table-length"
             aria-label="Select number of entries to display"
             aria-controls="table"
@@ -72,8 +72,9 @@ export default function Table({ data, columns }) {
           </select>{' '}
         </div>
         <div>
-          <label>Search:</label>
+          <label htmlFor="search-input">Search:</label>
           <input
+            id="search-input"
             type="search"
             aria-label="Type text to filter rows"
             aria-controls="table"
@@ -142,6 +143,7 @@ export default function Table({ data, columns }) {
                   <td
                     className={sort.key === key ? 'sorted' : ''}
                     key={`${key}`}
+                    data-testid={`cell-${key}`}
                   >
                     {row[key]}
                   </td>
@@ -171,7 +173,7 @@ export default function Table({ data, columns }) {
               aria-label="previous page"
               aria-controls="table"
               tabIndex="0"
-              data-testid="previous-next-button"
+              data-testid="previous-button"
               className="previous-next-button"
             >
               Previous
@@ -199,7 +201,7 @@ export default function Table({ data, columns }) {
               aria-label="next page"
               aria-controls="table"
               tabIndex="0"
-              data-testid="previous-next-button"
+              data-testid="next-button"
               className="previous-next-button"
             >
               Next
@@ -207,7 +209,7 @@ export default function Table({ data, columns }) {
           )}
         </div>
       </div>
-    </main>
+    </div>
   )
 }
 
