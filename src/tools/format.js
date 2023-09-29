@@ -49,37 +49,9 @@ export function sortList(list, key, direction) {
   })
 
   if (direction === 'descending') {
-    // console.log('descending')
     return sortedArray.reverse()
   }
-  // console.log('ascending')
   return sortedArray
-}
-
-/**
- * Slice list in chunks representing pages of desired number of entries
- * @param { Array } list Array of objects representing rows
- * @param { Integer } entries Number of rows to render on each page
- * @returns { Array } Array of chunks to be rendered, one per page
- */
-export function sliceListInChunks(list, entries) {
-  const pages = Math.ceil(list.length / entries)
-  let arrayOfChunks = []
-
-  for (let i = 0; i < pages; i++) {
-    if (i === 0) {
-      const firstArray = list.slice(0, entries)
-      arrayOfChunks.push(firstArray)
-    } else if (i > 0 && i < pages - 1) {
-      const middleArray = list.slice(entries * i, entries * i + entries)
-      arrayOfChunks.push(middleArray)
-    } else {
-      const lastArray = list.slice(entries * i, list.length)
-      arrayOfChunks.push(lastArray)
-    }
-  }
-  // console.log('arrayOfChunks', arrayOfChunks)
-  return arrayOfChunks
 }
 
 /**

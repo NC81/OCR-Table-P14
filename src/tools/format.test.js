@@ -1,10 +1,5 @@
 import '@testing-library/jest-dom'
-import {
-  sortList,
-  filterList,
-  sliceListInChunks,
-  convertIntegerInArray,
-} from './format'
+import { sortList, filterList, convertIntegerInArray } from './format'
 
 const arrayToTest = [
   { firstName: 'Feargus', birthDate: '04/19/1970' },
@@ -48,27 +43,6 @@ describe('Given I want filterList() to filter an array by case insensitive strin
     const filteredList = filterList(arrayToTest, 'SW')
     const expectedArray = [{ firstName: 'Swen', birthDate: '05/30/1972' }]
     expect(filteredList).toEqual(expectedArray)
-  })
-})
-
-describe('Given I want sliceListInChunks() to slice my list in chunks of x elements', () => {
-  it('should create an array of chunks accordingly', () => {
-    const chunks = sliceListInChunks(arrayToTest, 2)
-    const expectedArray = [
-      [
-        { firstName: 'Feargus', birthDate: '04/19/1970' },
-        { firstName: 'Chris', birthDate: '05/27/1968' },
-      ],
-      [
-        { firstName: 'Swen', birthDate: '05/30/1972' },
-        { firstName: 'Todd', birthDate: '10/06/1970' },
-      ],
-      [
-        { firstName: 'Brian', birthDate: '12/15/1962' },
-        { firstName: 'Frederick', birthDate: '05/15/1966' },
-      ],
-    ]
-    expect(chunks).toEqual(expectedArray)
   })
 })
 

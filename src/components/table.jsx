@@ -1,30 +1,25 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import {
-  sliceListInChunks,
-  convertIntegerInArray,
-  filterList,
-  sortList,
-} from '../tools/format'
-import sortingArrowOrder from '../assets/sort-arrow-order.png'
-import sortingArrowDisabled from '../assets/sort-arrow-disabled.png'
+import { filterList, sortList } from '../tools/format'
+import { defaultColumns } from '../tools/columns'
+import NoDataRow from './no-data-row'
+import Buttons from './buttons'
+import Head from './head'
+import Row from './row'
 
-export default function Table({ data, columns }) {
+export default function Table({ data, columns = defaultColumns }) {
+  const refData = useRef(data)
+  const [baseList, setBaseList] = useState(data)
+  const [newList, setNewList] = useState([])
+  const [filteredList, setFilteredList] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
   const [entries, setEntries] = useState(10)
-  const [page, setPage] = useState(1)
-  const [unsortedList, setUnsortedList] = useState(data)
-  const [chunksToDisplay, setChunksToDisplay] = useState([])
+  const [search, setSearch] = useState('')
   const [sort, setSort] = useState({
     key: columns[0].key,
     direction: 'ascending',
     nextDirection: 'descending',
   })
-  // console.log('entries', entries)
-  // console.log('chunksToDisplay', chunksToDisplay)
-  // console.log('page', page)
-  // console.log('numberOfPages', chunksToDisplay.length)
-  // console.log('unsortedList', unsortedList)
-  // console.log('sort', sort)
 
   function handleHeaderClick(header) {
     setSort({
@@ -40,25 +35,56 @@ export default function Table({ data, columns }) {
     })
   }
 
+  const totalPages = Math.ceil((baseList.length + newList.length) / entries)
+  const totalLength = baseList.length + newList.length
+
+  const giveAuthToDisplay = useCallback(
+    (index) => {
+      const fromValue = currentPage * entries - entries
+      const toValue = currentPage * entries - 1
+      const range = [fromValue, toValue]
+      return index >= range[0] && index <= range[1] ? true : false
+    },
+    [entries, currentPage]
+  )
+
+  const getNewRowPage = useCallback(() => {
+    const totalLength = baseList.length + newList.length
+    const freeSpots = totalPages * entries - totalLength
+    if (freeSpots > 0) {
+      return totalPages
+    }
+    return totalPages + 1
+  }, [entries, totalPages, baseList.length, newList.length])
+
   useEffect(() => {
-    const sortedList = sortList(unsortedList, sort.key, sort.direction)
-    const chunks = sliceListInChunks(sortedList, entries)
-    setPage(1)
-    setChunksToDisplay(chunks)
-  }, [unsortedList, entries, sort.key, sort.direction])
+    setNewList([])
+    setCurrentPage(1)
+    const activeList = search.length > 0 ? filteredList : refData.current
+    const sortedList = sortList([...activeList], sort.key, sort.direction)
+    setBaseList(sortedList)
+  }, [entries, filteredList, search.length, sort.key, sort.direction])
+
+  useEffect(() => {
+    if (data.length > refData.current.length) {
+      refData.current = data
+      const lastAddition = data[data.length - 1]
+      setNewList([...newList, { page: getNewRowPage(), data: lastAddition }])
+    }
+  }, [data, newList, getNewRowPage])
 
   return (
     <div data-testid="table" className="table-wrapper">
       <div className="table-top">
         <div>
-          <label htmlFor="entries-input">Entries to display:</label>
+          <label htmlFor="entries-select">Entries to display:</label>
           <select
-            id="entries-input"
+            id="entries-select"
             name="table-length"
             aria-label="Select number of entries to display"
             aria-controls="table"
             onChange={(e) => setEntries(Number(e.target.value))}
-            data-testid="select"
+            data-testid="entries-select"
             className="entries-select"
           >
             <option data-testid="option-10" value="10">
@@ -74,15 +100,17 @@ export default function Table({ data, columns }) {
         <div>
           <label htmlFor="search-input">Search:</label>
           <input
+            value={search}
             id="search-input"
             type="search"
             aria-label="Type text to filter rows"
             aria-controls="table"
-            onChange={(e) =>
+            onChange={(e) => {
+              setSearch(e.target.value)
               e.target.value.length > 0
-                ? setUnsortedList(filterList(data, e.target.value))
-                : setUnsortedList(data)
-            }
+                ? setFilteredList(filterList(data, e.target.value))
+                : setFilteredList([])
+            }}
             data-testid="search-input"
             className="search-input"
           ></input>
@@ -90,65 +118,39 @@ export default function Table({ data, columns }) {
       </div>
       <table id="table" role="grid" aria-describedby="table-info">
         <thead>
-          <tr role="row">
-            {columns.map(({ header, key }, index) => (
-              <th
-                key={`${key}-${index}`}
-                onClick={() => {
-                  handleHeaderClick(key)
-                }}
-                onKeyDown={(e) => {
-                  e.key === 'Enter' && handleHeaderClick(key)
-                }}
-                aria-label={`${header} activate to sort column ${
-                  key === sort.key ? sort.nextDirection : sort.direction
-                } `}
-                aria-sort={key === sort.key ? sort.direction : 'none'}
-                aria-controls="table"
-                tabIndex="0"
-                data-testid="head-column"
-              >
-                <div className="table-header">
-                  <span data-testid="header-title">{header}</span>
-                  <img
-                    className={`sort-icon ${
-                      key === sort.key ? sort.direction : ''
-                    }`}
-                    src={
-                      key === sort.key
-                        ? sortingArrowOrder
-                        : sortingArrowDisabled
-                    }
-                    alt={
-                      key === sort.key
-                        ? `Sorted in ${sort.direction} order`
-                        : 'Sort'
-                    }
-                  />
-                </div>
-              </th>
-            ))}
-          </tr>
+          <Head
+            sort={sort}
+            handleHeaderClick={handleHeaderClick}
+            columns={columns}
+          />
         </thead>
         <tbody>
-          {chunksToDisplay.length > 0 &&
-            chunksToDisplay[page - 1].map((row, index) => (
-              <tr
-                className={index % 2 === 0 ? 'row-even' : ''}
-                key={`${index}`}
-                role="row"
-                data-testid="row"
-              >
-                {columns.map(({ key }) => (
-                  <td
-                    className={sort.key === key ? 'sorted' : ''}
-                    key={`${key}`}
-                    data-testid={`cell-${key}`}
-                  >
-                    {row[key]}
-                  </td>
-                ))}
-              </tr>
+          <NoDataRow
+            noData={data.length === 0}
+            noMatch={search.length > 0 && filteredList.length === 0}
+          />
+          {baseList.map((row, index) => (
+            <Row
+              data={row}
+              display={giveAuthToDisplay(index)}
+              key={`${row.firstName}-${index}`}
+              index={index}
+              sortKey={sort.key}
+              columns={columns}
+            />
+          ))}
+          {newList
+            .filter((el) => el.page === currentPage)
+            .map((row, index) => (
+              <Row
+                data={row.data}
+                display={true}
+                key={`${row.data.firstName}-${index}`}
+                index={index}
+                sortKey={sort.key}
+                columns={columns}
+                className="new-row"
+              />
             ))}
         </tbody>
       </table>
@@ -160,54 +162,18 @@ export default function Table({ data, columns }) {
           id="table-info"
           className="table-info"
         >
-          Showing {page * entries + 1 - entries} to{' '}
-          {page === chunksToDisplay.length
-            ? unsortedList.length
-            : page * entries}{' '}
-          of {unsortedList.length} entries
+          {totalLength === 0
+            ? 'Showing no entries'
+            : `Showing ${currentPage * entries + 1 - entries} to ${
+                currentPage === totalPages ? totalLength : currentPage * entries
+              } of ${totalLength} entries`}
         </span>
-        <div>
-          {chunksToDisplay.length > 1 && page > 1 && (
-            <button
-              onClick={() => setPage(page - 1)}
-              aria-label="previous page"
-              aria-controls="table"
-              tabIndex="0"
-              data-testid="previous-button"
-              className="previous-next-button"
-            >
-              Previous
-            </button>
-          )}
-          {chunksToDisplay.length > 1 &&
-            convertIntegerInArray(chunksToDisplay.length).map(
-              (integer, index) => (
-                <button
-                  onClick={() => setPage(integer)}
-                  data-testid="page-button"
-                  className={page === index + 1 ? 'active-page' : ''}
-                  key={`${integer}-${index}`}
-                  aria-controls="table"
-                  tabIndex="0"
-                  aria-current={page === index + 1 && 'page'}
-                >
-                  {integer}
-                </button>
-              )
-            )}
-          {page < chunksToDisplay.length && (
-            <button
-              onClick={() => setPage(page + 1)}
-              aria-label="next page"
-              aria-controls="table"
-              tabIndex="0"
-              data-testid="next-button"
-              className="previous-next-button"
-            >
-              Next
-            </button>
-          )}
-        </div>
+        <Buttons
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalLength={totalLength}
+          setCurrentPage={setCurrentPage}
+        />
       </div>
     </div>
   )
@@ -215,5 +181,5 @@ export default function Table({ data, columns }) {
 
 Table.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-  columns: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  columns: PropTypes.arrayOf(PropTypes.object.isRequired),
 }

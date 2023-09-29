@@ -31,6 +31,15 @@ tr {
   height: 26px;
 }
 
+td {
+  padding: 8px 10px;
+}
+
+.no-data-text {
+  text-align: center;
+  background-color: #f7b6b6;
+}
+
 .table-header {
   cursor: pointer;
   user-select: none;
@@ -39,11 +48,11 @@ tr {
 
 .table-header span {
   color: #616161;
-  margin-right: 3px;
+  margin-right: 4px;
 }
 
 .sorted {
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: rgb(109 201 193 / 27%);
 }
 
 .sort-icon {
@@ -55,10 +64,11 @@ tr {
 }
 
 tbody tr:hover {
-  background-color: white;
+  background-color: #1b7575;
+  color: white;
 }
 
-.row-even {
+.row-odd {
   background-color: rgba(0, 0, 0, 0.08);
 }
 
@@ -112,4 +122,12 @@ button[aria-current='page'] {
 
 .table-info {
   font-weight: 500;
+}
+
+.new-row {
+  background-color: #b0e5b0;
+}
+
+.display-none {
+  display: none;
 }

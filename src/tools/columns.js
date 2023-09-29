@@ -1,4 +1,4 @@
-export const columns = [
+export const defaultColumns = [
   { key: 'firstName', header: 'First Name' },
   { key: 'lastName', header: 'Last Name' },
   { key: 'startDate', header: 'Start Date' },
