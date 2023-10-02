@@ -2,8 +2,8 @@ import '@testing-library/jest-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mockList } from '../mock/mockList'
-import { sortList, filterList } from '../tools/format'
-import { defaultColumns } from '../tools/columns'
+import { sortList, filterList } from '../utils/format/format'
+import { defaultColumns } from '../utils/columns'
 import { act } from 'react-dom/test-utils'
 import Table from './table'
 
@@ -39,7 +39,9 @@ describe('Given the data list is empty', () => {
     render(<Table data={[]} />)
 
     await waitFor(() => expect(screen.queryAllByTestId('row').length).toBe(0))
-    expect(screen.getByText('No data available in table')).toBeInTheDocument()
+    expect(
+      screen.getByText('No data available in table...')
+    ).toBeInTheDocument()
   })
 })
 
@@ -294,7 +296,9 @@ describe('Given I type text in search input', () => {
 
       user.type(input, stringToSearch)
       await waitFor(() => expect(screen.queryAllByTestId('row').length).toBe(0))
-      expect(screen.getByText('No matching record found')).toBeInTheDocument()
+      expect(
+        screen.getByText('No matching record found...')
+      ).toBeInTheDocument()
     })
   })
 })

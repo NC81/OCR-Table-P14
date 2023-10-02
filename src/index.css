@@ -68,7 +68,7 @@ tbody tr:hover {
   color: white;
 }
 
-.row-odd {
+.row-even {
   background-color: rgba(0, 0, 0, 0.08);
 }
 
@@ -124,9 +124,9 @@ button[aria-current='page'] {
   font-weight: 500;
 }
 
-.new-row {
+/* .new-row {
   background-color: #b0e5b0;
-}
+} */
 
 .display-none {
   display: none;

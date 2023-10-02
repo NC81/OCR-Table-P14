@@ -14,8 +14,11 @@ export default function Head({ sort, handleHeaderClick, columns }) {
             e.key === 'Enter' && handleHeaderClick(key)
           }}
           aria-label={`${header} activate to sort column ${
-            key === sort.key ? sort.nextDirection : sort.direction
-          } `}
+            key === sort.key && sort.direction === 'ascending'
+              ? 'descending'
+              : 'ascending'
+          } 
+          `}
           aria-sort={key === sort.key ? sort.direction : 'none'}
           aria-controls="table"
           tabIndex="0"

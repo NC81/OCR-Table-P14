@@ -1,3 +1,4 @@
+// 'Key' defines property accessor to object data, 'header' defines associated header title
 export const defaultColumns = [
   { key: 'firstName', header: 'First Name' },
   { key: 'lastName', header: 'Last Name' },

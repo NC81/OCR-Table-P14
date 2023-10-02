@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { filterList, sortList } from '../tools/format'
-import { defaultColumns } from '../tools/columns'
+import { filterList, sortList } from '../utils/format/format'
+import { defaultColumns } from '../utils/columns'
 import NoDataRow from './no-data-row'
 import Buttons from './buttons'
 import Head from './head'
@@ -10,7 +10,6 @@ import Row from './row'
 export default function Table({ data, columns = defaultColumns }) {
   const refData = useRef(data)
   const [baseList, setBaseList] = useState(data)
-  const [newList, setNewList] = useState([])
   const [filteredList, setFilteredList] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [entries, setEntries] = useState(10)
@@ -18,9 +17,9 @@ export default function Table({ data, columns = defaultColumns }) {
   const [sort, setSort] = useState({
     key: columns[0].key,
     direction: 'ascending',
-    nextDirection: 'descending',
   })
 
+  // Set new sort state on clicking headers
   function handleHeaderClick(header) {
     setSort({
       key: header,
@@ -30,51 +29,40 @@ export default function Table({ data, columns = defaultColumns }) {
             ? 'descending'
             : 'ascending'
           : 'ascending',
-      nextDirection:
-        sort.direction === 'ascending' ? 'ascending' : 'descending',
     })
   }
 
-  const totalPages = Math.ceil((baseList.length + newList.length) / entries)
-  const totalLength = baseList.length + newList.length
+  // Number of pages required to render all data
+  const pages = Math.ceil(baseList.length / entries)
 
-  const giveAuthToDisplay = useCallback(
-    (index) => {
-      const fromValue = currentPage * entries - entries
-      const toValue = currentPage * entries - 1
-      const range = [fromValue, toValue]
-      return index >= range[0] && index <= range[1] ? true : false
-    },
-    [entries, currentPage]
-  )
+  // Start/end indexes defining range for rendered list
+  const sliceStartIndex = currentPage * entries - entries
+  const sliceEndIndex = currentPage * entries
 
-  const getNewRowPage = useCallback(() => {
-    const totalLength = baseList.length + newList.length
-    const freeSpots = totalPages * entries - totalLength
-    if (freeSpots > 0) {
-      return totalPages
-    }
-    return totalPages + 1
-  }, [entries, totalPages, baseList.length, newList.length])
-
-  useEffect(() => {
-    setNewList([])
-    setCurrentPage(1)
-    const activeList = search.length > 0 ? filteredList : refData.current
-    const sortedList = sortList([...activeList], sort.key, sort.direction)
-    setBaseList(sortedList)
-  }, [entries, filteredList, search.length, sort.key, sort.direction])
-
+  // When data prop is updated, set refData and rendered list
   useEffect(() => {
     if (data.length > refData.current.length) {
       refData.current = data
       const lastAddition = data[data.length - 1]
-      setNewList([...newList, { page: getNewRowPage(), data: lastAddition }])
+      setBaseList([...baseList, lastAddition])
     }
-  }, [data, newList, getNewRowPage])
+  }, [data, baseList, entries])
+
+  // When search and sort states are updated, go to first page, sort list and set rendered list
+  useEffect(() => {
+    setCurrentPage(1)
+    const activeList = search.length > 0 ? filteredList : refData.current
+    const sortedList = sortList([...activeList], sort.key, sort.direction)
+    setBaseList(sortedList)
+  }, [filteredList, search, sort])
+
+  // When entries state is updated, go to first page
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [entries])
 
   return (
-    <div data-testid="table" className="table-wrapper">
+    <div className="table-wrapper">
       <div className="table-top">
         <div>
           <label htmlFor="entries-select">Entries to display:</label>
@@ -126,32 +114,18 @@ export default function Table({ data, columns = defaultColumns }) {
         </thead>
         <tbody>
           <NoDataRow
-            noData={data.length === 0}
+            noData={refData.current.length === 0}
             noMatch={search.length > 0 && filteredList.length === 0}
           />
-          {baseList.map((row, index) => (
+          {baseList.slice(sliceStartIndex, sliceEndIndex).map((row, index) => (
             <Row
               data={row}
-              display={giveAuthToDisplay(index)}
               key={`${row.firstName}-${index}`}
               index={index}
               sortKey={sort.key}
               columns={columns}
             />
           ))}
-          {newList
-            .filter((el) => el.page === currentPage)
-            .map((row, index) => (
-              <Row
-                data={row.data}
-                display={true}
-                key={`${row.data.firstName}-${index}`}
-                index={index}
-                sortKey={sort.key}
-                columns={columns}
-                className="new-row"
-              />
-            ))}
         </tbody>
       </table>
       <div className="table-bottom">
@@ -162,16 +136,16 @@ export default function Table({ data, columns = defaultColumns }) {
           id="table-info"
           className="table-info"
         >
-          {totalLength === 0
+          {baseList.length === 0
             ? 'Showing no entries'
             : `Showing ${currentPage * entries + 1 - entries} to ${
-                currentPage === totalPages ? totalLength : currentPage * entries
-              } of ${totalLength} entries`}
+                currentPage === pages ? baseList.length : currentPage * entries
+              } of ${baseList.length} entries`}
         </span>
         <Buttons
           currentPage={currentPage}
-          totalPages={totalPages}
-          totalLength={totalLength}
+          pages={pages}
+          length={baseList.length}
           setCurrentPage={setCurrentPage}
         />
       </div>

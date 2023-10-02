@@ -1,14 +1,14 @@
-import { convertIntegerInArray } from '../tools/format'
+import { convertIntegerInArray } from '../utils/format/format'
 
 export default function Buttons({
   currentPage,
-  totalPages,
-  totalLength,
+  pages,
+  length,
   setCurrentPage,
 }) {
   return (
     <div>
-      {totalLength > 1 && currentPage > 1 && (
+      {length > 1 && currentPage > 1 && (
         <button
           onClick={() => setCurrentPage(currentPage - 1)}
           aria-label="previous page"
@@ -20,8 +20,8 @@ export default function Buttons({
           Previous
         </button>
       )}
-      {totalPages > 1 &&
-        convertIntegerInArray(totalPages).map((integer, index) => (
+      {pages > 1 &&
+        convertIntegerInArray(pages).map((integer, index) => (
           <button
             onClick={() => setCurrentPage(integer)}
             data-testid="page-button"
@@ -34,7 +34,7 @@ export default function Buttons({
             {integer}
           </button>
         ))}
-      {currentPage < totalPages && (
+      {currentPage < pages && (
         <button
           onClick={() => setCurrentPage(currentPage + 1)}
           aria-label="next page"
