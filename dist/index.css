@@ -1,38 +1,26 @@
-body {
-  margin: 0;
-  font-family: 'Roboto', 'Helvetica', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 .table-top,
 .table-bottom {
   display: flex;
   justify-content: space-between;
 }
 
-.table-top label {
-  font-weight: 500;
-  line-height: 30px;
+.table-top div {
+  display: flex;
+  align-items: center;
 }
 
-.table-wrapper {
-  background-color: #efeee8;
-  padding: 30px 40px;
-  box-shadow: 0px 1px 8px 0px rgba(99, 99, 99, 0.2);
-}
-
-table {
+.table {
   width: 100%;
-  margin: 10px 0 15px;
+  margin: 15px 0 15px;
 }
 
-tr {
+.table tr {
   height: 26px;
 }
 
-td {
+.table-cell {
   padding: 8px 10px;
+  font-size: 14px;
 }
 
 .no-data-text {
@@ -63,7 +51,7 @@ td {
   transform: rotate(180deg);
 }
 
-tbody tr:hover {
+.table tbody tr:hover {
   background-color: #1b7575;
   color: white;
 }
@@ -72,39 +60,25 @@ tbody tr:hover {
   background-color: rgba(0, 0, 0, 0.08);
 }
 
-button {
+.page-button {
   border: none;
   cursor: pointer;
   width: 25px;
   height: 25px;
 }
 
-.previous-next-button {
-  width: fit-content;
-}
-
-button:hover {
+.page-button:hover:not(.page-button-active) {
   background-color: white;
+  color: black;
 }
 
-button[aria-current='page'] {
+.page-button-active {
   background-color: #1b7575;
   color: white;
 }
 
-.active-page:hover {
-  background-color: rgba(0, 0, 0, 0.15);
-}
-
-.entries-select,
-.search-input {
-  height: 30px;
-  margin-left: 10px;
-  background-color: #f7f7f7;
-  border: none;
-  outline: none;
-  padding: 4px 11px;
-  box-shadow: inset 1px 1px 4px rgba(161, 161, 161, 0.788);
+.previous-next-button {
+  width: fit-content;
 }
 
 .entries-select {
@@ -115,15 +89,7 @@ button[aria-current='page'] {
   width: 160px;
 }
 
-.entries-select:focus-visible,
-.search-input:focus-visible {
-  background-color: white;
-}
-
 .table-info {
+  font-size: 15px;
   font-weight: 500;
-}
-
-.display-none {
-  display: none;
 }

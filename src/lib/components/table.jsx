@@ -64,7 +64,7 @@ export default function Table({ data, columns = defaultColumns }) {
   }, [entries])
 
   return (
-    <div className="table-wrapper">
+    <div>
       <div className="table-top">
         <div>
           <label htmlFor="entries-select">Entries to display:</label>
@@ -106,7 +106,12 @@ export default function Table({ data, columns = defaultColumns }) {
           ></input>
         </div>
       </div>
-      <table id="table" role="grid" aria-describedby="table-info">
+      <table
+        className="table"
+        id="table"
+        role="grid"
+        aria-describedby="table-info"
+      >
         <thead>
           <Head
             sort={sort}

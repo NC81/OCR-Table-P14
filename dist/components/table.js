@@ -60,9 +60,7 @@ export default function Table({
   useEffect(() => {
     setCurrentPage(1);
   }, [entries]);
-  return /*#__PURE__*/React.createElement("div", {
-    className: "table-wrapper"
-  }, /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "table-top"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
     htmlFor: "entries-select"
@@ -99,6 +97,7 @@ export default function Table({
     "data-testid": "search-input",
     className: "search-input"
   }))), /*#__PURE__*/React.createElement("table", {
+    className: "table",
     id: "table",
     role: "grid",
     "aria-describedby": "table-info"

@@ -11,7 +11,7 @@ export default memo(function Row({ data, index, sortKey, columns }) {
     >
       {columns.map(({ key }) => (
         <td
-          className={sortKey === key ? 'sorted' : ''}
+          className={sortKey === key ? 'table-cell sorted' : 'table-cell'}
           key={`${key}`}
           data-testid={`cell-${key}`}
         >

@@ -15,7 +15,7 @@ export default /*#__PURE__*/memo(function Row({
   }, columns.map(({
     key
   }) => /*#__PURE__*/React.createElement("td", {
-    className: sortKey === key ? 'sorted' : '',
+    className: sortKey === key ? 'table-cell sorted' : 'table-cell',
     key: `${key}`,
     "data-testid": `cell-${key}`
   }, data[key])));

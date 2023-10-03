@@ -17,7 +17,7 @@ export default function Buttons({
           aria-controls="table"
           tabIndex="0"
           data-testid="previous-button"
-          className="previous-next-button"
+          className="page-button previous-next-button"
         >
           Previous
         </button>
@@ -27,7 +27,11 @@ export default function Buttons({
           <button
             onClick={() => setCurrentPage(integer)}
             data-testid="page-button"
-            className={currentPage === index + 1 ? 'active-page' : ''}
+            className={
+              currentPage === index + 1
+                ? 'page-button page-button-active'
+                : 'page-button'
+            }
             key={`${integer}-${index}`}
             aria-controls="table"
             tabIndex="0"
@@ -43,7 +47,7 @@ export default function Buttons({
           aria-controls="table"
           tabIndex="0"
           data-testid="next-button"
-          className="previous-next-button"
+          className="page-button previous-next-button"
         >
           Next
         </button>
