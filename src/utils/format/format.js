@@ -22,7 +22,7 @@ export function filterList(list, string) {
  * @returns { Array } Sorted array
  */
 export function sortList(list, key, direction) {
-  if (key === 'startDate' || key === 'birthDate') {
+  if (key.toLowerCase().includes('date')) {
     const dateArray = list.map((el) => {
       const newDate = new Date(el[key])
       return { ...el, newDate: newDate }

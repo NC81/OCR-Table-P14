@@ -1,70 +1,98 @@
-# Getting Started with Create React App
+# Table-P14 Student Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Table-P14 is a React Table library converted from this [jQuery plugin](https://github.com/DataTables/DataTables.git) and intended to work with [P14 App](https://github.com/NC81/NicolasCandeli_14_08092023.git)
+It can also work on any React App provided **columns** prop is [properly configured](#on-another-app)
 
-## Available Scripts
+## Technologies
 
-In the project directory, you can run:
+- JS
+- React
 
-### `npm start`
+## Dependencies
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- PropTypes
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Features
 
-### `npm test`
+- Entries selector
+- Search
+- Sorting
+- Pagination
+- Good Accessibility
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation
 
-### `npm run build`
+`npm install table-p14`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Usage
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### On P14 App
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+In _src/pages/employees-list.jsx_ :
 
-### `npm run eject`
+```js
+import { useSelector } from 'react-redux'
+import { employees } from '../features/employees'
+import { Table } from 'table-p14'
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+export default function EmployeesList() {
+  const employeesSelector = useSelector(employees)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  return (
+    <div className="page-wrapper">
+      <Table data={employeesSelector} />
+    </div>
+  )
+}
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+#### Optional
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+As columns are already configured to work with P14 project, defining **columns** prop is not required
 
-## Learn More
+Here's how columns are represented in the default **columns** prop :
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **key** gives access to data object properties
+- **header** defines rendered columns titles
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```js
+[
+  { key: 'firstName', header: 'First Name' },
+  { key: 'lastName', header: 'Last Name' },
+  { key: 'startDate', header: 'Start Date' },
+  { key: 'department', header: 'Department' },
+  { key: 'birthDate', header: 'Date of Birth' },
+  { key: 'street', header: 'Street' },
+  { key: 'city', header: 'City' },
+  { key: 'state', header: 'State' },
+  { key: 'zip', header: 'Zip Code' },
+]
+```
 
-### Code Splitting
+If you want to change columns order or headers titles, make sure the new array passed in **columns** prop has unchanged key properties
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### On another App
 
-### Analyzing the Bundle Size
+To install this package on another App, you need to pass a customized array in **columns** prop with key values matching objects data keys in string
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+For example, with this data array :
 
-### Making a Progressive Web App
+```js
+[
+  { title: 'Alien ', date: '1979', rating: '5' },
+  { title: 'Blade Runner', date: '1982', rating: '5' },
+  ...
+]
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+You should set your columns array as following :
 
-### Advanced Configuration
+```js
+[
+  { key: 'title', header: 'Title' },
+  { key: 'date', header: 'Release Date' },
+  { key: 'rating', header: 'Our review' },
+]
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Finally, for dates sorting to work, be careful to include 'date' string in your key (case insensitive)

@@ -1,5 +1,5 @@
-import sortingArrowOrder from '../assets/sort-arrow-order.png'
-import sortingArrowDisabled from '../assets/sort-arrow-disabled.png'
+import sortingArrowOrder from '../../assets/sort-arrow-order.png'
+import sortingArrowDisabled from '../../assets/sort-arrow-disabled.png'
 
 export default function Head({ sort, handleHeaderClick, columns }) {
   return (

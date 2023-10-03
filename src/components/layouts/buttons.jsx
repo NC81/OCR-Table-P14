@@ -1,4 +1,4 @@
-import { convertIntegerInArray } from '../utils/format/format'
+import { convertIntegerInArray } from '../../utils/format/format'
 
 export default function Buttons({
   currentPage,

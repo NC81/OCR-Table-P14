@@ -2,10 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { filterList, sortList } from '../utils/format/format'
 import { defaultColumns } from '../utils/columns'
-import NoDataRow from './no-data-row'
-import Buttons from './buttons'
-import Head from './head'
-import Row from './row'
+import NoDataRow from './layouts/no-data-row'
+import Buttons from './layouts/buttons'
+import Head from './layouts/head'
+import Row from './layouts/row'
 
 export default function Table({ data, columns = defaultColumns }) {
   const refData = useRef(data)

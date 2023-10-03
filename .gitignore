@@ -21,8 +21,6 @@
 # dev
 /src/mock
 jquery
-test.html
-clone.jsx
 container.jsx
 container.test.js
 
