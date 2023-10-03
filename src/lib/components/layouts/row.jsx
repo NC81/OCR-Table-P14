@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import React, { memo } from 'react'
 
 export default memo(function Row({ data, index, sortKey, columns }) {
   return (

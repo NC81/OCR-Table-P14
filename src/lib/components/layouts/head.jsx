@@ -1,3 +1,4 @@
+import React from 'react'
 import sortingArrowOrder from '../../assets/sort-arrow-order.png'
 import sortingArrowDisabled from '../../assets/sort-arrow-disabled.png'
 

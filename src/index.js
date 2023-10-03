@@ -1,12 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Table from './components/table'
-import { mockList } from './mock/mockList'
-import './index.css'
+import MockPage from './mock/mock-page'
+import './lib/index.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
-    <Table data={mockList} />
+    <MockPage />
   </React.StrictMode>
 )

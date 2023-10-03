@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { mockList } from '../mock/mockList'
+import { initialList } from '../../mock/list'
 import { sortList, filterList } from '../utils/format/format'
 import { defaultColumns } from '../utils/columns'
 import { act } from 'react-dom/test-utils'
@@ -9,9 +9,9 @@ import Table from './table'
 
 describe('Given the table is displayed', () => {
   it('should render all the headers', () => {
-    render(<Table data={mockList} />)
+    render(<Table data={initialList} />)
 
-    const propertiesNumber = Object.keys(mockList[0]).length
+    const propertiesNumber = Object.keys(initialList[0]).length
     const headColumns = screen.getAllByTestId('head-column')
     expect(headColumns.length).toBe(propertiesNumber)
 
@@ -26,7 +26,7 @@ describe('Given the table is displayed', () => {
   })
 
   it('should render all the required tools', () => {
-    render(<Table data={mockList} />)
+    render(<Table data={initialList} />)
 
     expect(screen.getByTestId('entries-select')).toBeInTheDocument()
     expect(screen.getByTestId('search-input')).toBeInTheDocument()
@@ -47,7 +47,7 @@ describe('Given the data list is empty', () => {
 
 describe('Given the data list is not empty', () => {
   it('should render default number of rows with the corresponding info text', async () => {
-    render(<Table data={mockList} />)
+    render(<Table data={initialList} />)
 
     const rows = screen.getAllByTestId('row')
     const optionsList = screen.getAllByRole('option')
@@ -61,7 +61,7 @@ describe('Given the data list is not empty', () => {
   })
 
   it('should sort rows in ascending order by the first property', () => {
-    render(<Table data={mockList} />)
+    render(<Table data={initialList} />)
 
     expect(
       screen.getAllByTestId('head-column')[0].getAttribute('aria-sort')
@@ -71,7 +71,7 @@ describe('Given the data list is not empty', () => {
     const order = headColumns[0].getAttribute('aria-sort')
     expect(order).toBe('ascending')
 
-    const sortedList = sortList(mockList, 'firstName', 'ascending')
+    const sortedList = sortList(initialList, 'firstName', 'ascending')
     const firstPageElements = sortedList.filter((el, index) => index < 10)
     const firstPageFirstNames = firstPageElements.map((el) => {
       return el.firstName
@@ -86,7 +86,7 @@ describe('Given the data list is not empty', () => {
   })
 
   it('should render the appropriate number of page buttons', async () => {
-    render(<Table data={mockList} />)
+    render(<Table data={initialList} />)
 
     const buttons = screen.getAllByTestId('page-button')
     const ariaCurrentFirstButton = buttons[0].getAttribute('aria-current')
@@ -99,7 +99,7 @@ describe('Given I want to sort the table', () => {
   describe('when I click on the first header already sorting in ascending order', () => {
     it('should sort rows in descending order', async () => {
       const user = userEvent.setup()
-      render(<Table data={mockList} />)
+      render(<Table data={initialList} />)
 
       user.click(screen.getAllByTestId('head-column')[0])
       await waitFor(() =>
@@ -108,7 +108,7 @@ describe('Given I want to sort the table', () => {
         ).toBe('descending')
       )
 
-      const sortedList = sortList(mockList, 'firstName', 'descending')
+      const sortedList = sortList(initialList, 'firstName', 'descending')
       const firstPageElements = sortedList.filter((el, index) => index < 10)
       const firstPagelastNames = firstPageElements.map((el) => {
         return el.lastName
@@ -125,7 +125,7 @@ describe('Given I want to sort the table', () => {
 
     describe('when the second header is focused and I press enter', () => {
       it('should sort rows in ascending order', async () => {
-        render(<Table data={mockList} />)
+        render(<Table data={initialList} />)
 
         const lastNameHeader = screen.getAllByTestId('head-column')[1]
         lastNameHeader.focus()
@@ -137,7 +137,7 @@ describe('Given I want to sort the table', () => {
           expect(lastNameHeader.getAttribute('aria-sort')).toBe('ascending')
         )
 
-        const sortedList = sortList(mockList, 'lastName', 'ascending')
+        const sortedList = sortList(initialList, 'lastName', 'ascending')
         const firstPageElements = sortedList.filter((el, index) => index < 10)
         const firstPagelastNames = firstPageElements.map((el) => {
           return el.lastName
@@ -158,7 +158,7 @@ describe('Given I want to sort the table', () => {
 describe('Given I select the second entries value', () => {
   it('should render the appropriate number of rows and update info text', async () => {
     const user = userEvent.setup()
-    render(<Table data={mockList} />)
+    render(<Table data={initialList} />)
 
     const select = screen.getByTestId('entries-select')
     const secondOption = screen.getByTestId('option-25')
@@ -167,7 +167,7 @@ describe('Given I select the second entries value', () => {
     })
     await waitFor(() => expect(secondOption.selected).toBe(true))
     await waitFor(() =>
-      expect(screen.getAllByTestId('row').length).toBe(mockList.length)
+      expect(screen.getAllByTestId('row').length).toBe(initialList.length)
     )
 
     expect(screen.getByTestId('table-info')).toHaveTextContent(
@@ -180,9 +180,9 @@ describe('Given I want to navigate between pages', () => {
   describe('when I click on the last page button', () => {
     it('should render the correct shunk of data and update info text', async () => {
       const user = userEvent.setup()
-      render(<Table data={mockList} />)
+      render(<Table data={initialList} />)
 
-      const sortedList = sortList(mockList, 'firstName', 'ascending')
+      const sortedList = sortList(initialList, 'firstName', 'ascending')
 
       const buttons = screen.getAllByTestId('page-button')
       const lastPageElements = sortedList.filter(
@@ -214,9 +214,9 @@ describe('Given I want to navigate between pages', () => {
   describe('when I click on next/previous page buttons', () => {
     it('should render the correct shunk of data and update info text', async () => {
       const user = userEvent.setup()
-      render(<Table data={mockList} />)
+      render(<Table data={initialList} />)
 
-      const sortedList = sortList(mockList, 'firstName', 'ascending')
+      const sortedList = sortList(initialList, 'firstName', 'ascending')
       const secondPageElements = sortedList.filter(
         (el, index) => index > 9 && index < 20
       )
@@ -265,12 +265,12 @@ describe('Given I want to navigate between pages', () => {
 describe('Given I type text in search input', () => {
   it('should filter rows accordingly', async () => {
     const user = userEvent.setup()
-    render(<Table data={mockList} />)
+    render(<Table data={initialList} />)
 
     const input = screen.getByTestId('search-input')
     const stringToSearch = 'chris'
 
-    const filteredList = filterList(mockList, stringToSearch)
+    const filteredList = filterList(initialList, stringToSearch)
 
     user.type(input, stringToSearch)
     await waitFor(() =>
@@ -286,12 +286,12 @@ describe('Given I type text in search input', () => {
   describe('when no record have been found', () => {
     it('should render an appropriate message', async () => {
       const user = userEvent.setup()
-      render(<Table data={mockList} />)
+      render(<Table data={initialList} />)
 
       const input = screen.getByTestId('search-input')
       const stringToSearch = 'aaa'
 
-      const filteredList = filterList(mockList, stringToSearch)
+      const filteredList = filterList(initialList, stringToSearch)
       expect(filteredList.length).toBe(0)
 
       user.type(input, stringToSearch)

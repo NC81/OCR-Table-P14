@@ -1,3 +1,4 @@
+import React from 'react'
 import { convertIntegerInArray } from '../../utils/format/format'
 
 export default function Buttons({

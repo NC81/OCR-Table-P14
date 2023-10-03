@@ -1,0 +1,129 @@
+body {
+  margin: 0;
+  font-family: 'Roboto', 'Helvetica', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.table-top,
+.table-bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.table-top label {
+  font-weight: 500;
+  line-height: 30px;
+}
+
+.table-wrapper {
+  background-color: #efeee8;
+  padding: 30px 40px;
+  box-shadow: 0px 1px 8px 0px rgba(99, 99, 99, 0.2);
+}
+
+table {
+  width: 100%;
+  margin: 10px 0 15px;
+}
+
+tr {
+  height: 26px;
+}
+
+td {
+  padding: 8px 10px;
+}
+
+.no-data-text {
+  text-align: center;
+  background-color: #f7b6b6;
+}
+
+.table-header {
+  cursor: pointer;
+  user-select: none;
+  width: max-content;
+}
+
+.table-header span {
+  color: #616161;
+  margin-right: 4px;
+}
+
+.sorted {
+  background-color: rgb(109 201 193 / 27%);
+}
+
+.sort-icon {
+  width: 12px;
+}
+
+.ascending {
+  transform: rotate(180deg);
+}
+
+tbody tr:hover {
+  background-color: #1b7575;
+  color: white;
+}
+
+.row-even {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+}
+
+.previous-next-button {
+  width: fit-content;
+}
+
+button:hover {
+  background-color: white;
+}
+
+button[aria-current='page'] {
+  background-color: #1b7575;
+  color: white;
+}
+
+.active-page:hover {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.entries-select,
+.search-input {
+  height: 30px;
+  margin-left: 10px;
+  background-color: #f7f7f7;
+  border: none;
+  outline: none;
+  padding: 4px 11px;
+  box-shadow: inset 1px 1px 4px rgba(161, 161, 161, 0.788);
+}
+
+.entries-select {
+  width: 70px;
+}
+
+.search-input {
+  width: 160px;
+}
+
+.entries-select:focus-visible,
+.search-input:focus-visible {
+  background-color: white;
+}
+
+.table-info {
+  font-weight: 500;
+}
+
+.display-none {
+  display: none;
+}

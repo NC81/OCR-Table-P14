@@ -1,3 +1,5 @@
+import React from 'react'
+
 export default function NoDataRow({ noData, noMatch }) {
   return (
     <>
