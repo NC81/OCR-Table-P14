@@ -1,5 +1,7 @@
 import React from 'react';
 import { convertIntegerInArray } from '../../utils/format/format';
+
+// Page buttons group composed of numbered and previous/next buttons
 export default function Buttons({
   currentPage,
   pages,

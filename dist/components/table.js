@@ -7,6 +7,8 @@ import Buttons from './layouts/buttons';
 import Head from './layouts/head';
 import Row from './layouts/row';
 import '../index.css';
+
+// Parent component rendering whole table
 export default function Table({
   data,
   columns = defaultColumns
@@ -30,7 +32,7 @@ export default function Table({
     });
   }
 
-  // Number of pages required to render all data
+  // Number of pages required to render every rows with entries state
   const pages = Math.ceil(baseList.length / entries);
 
   // Start/end indexes defining range for rendered list

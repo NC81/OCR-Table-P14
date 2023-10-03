@@ -1,4 +1,6 @@
 import React, { memo } from 'react';
+
+// Classic row rendering list data object
 export default /*#__PURE__*/memo(function Row({
   data,
   index,
