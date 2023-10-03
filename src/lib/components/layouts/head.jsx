@@ -2,6 +2,7 @@ import React from 'react'
 import sortingArrowOrder from '../../assets/sort-arrow-order.png'
 import sortingArrowDisabled from '../../assets/sort-arrow-disabled.png'
 
+// Head row rendering columns header titles with deep accessibility
 export default function Head({ sort, handleHeaderClick, columns }) {
   return (
     <tr role="row">

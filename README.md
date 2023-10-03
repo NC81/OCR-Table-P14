@@ -1,7 +1,7 @@
 # OCR-Table-P14 Student Project
 
 **OCR-Table-P14** is a React Table library converted from this [jQuery plugin](https://github.com/DataTables/DataTables.git) and intended to work with [P14 App](https://github.com/NC81/NicolasCandeli_14_08092023.git).
-It can also work on any React App provided _columns_ prop is [properly configured](#on-another-app).
+It can also work on any React App provided ***columns*** prop is [properly configured](#on-another-app).
 
 ## Technologies
 
@@ -15,9 +15,9 @@ It can also work on any React App provided _columns_ prop is [properly configure
 ## Features
 
 - Entries selection
-- Searching
-- Sorting (texts, numbers and dates)
 - Pagination
+- Search
+- Sort texts, numbers and dates
 - Good accessibility
 
 ## Installation
@@ -48,12 +48,12 @@ export default function EmployeesList() {
 
 #### Optional
 
-As columns are already configured with a **default** prop for [P14 App](https://github.com/NC81/NicolasCandeli_14_08092023.git), defining ***columns*** prop is not required.
+As columns are already configured with a default prop for [P14 App](https://github.com/NC81/NicolasCandeli_14_08092023.git), defining ***columns*** prop is not required.
 
 Here's how default columns look like :
 
-- ==key== gives access to data object properties
-- ==header== defines rendered columns titles
+- **key** gives access to data object properties
+- **header** defines rendered columns titles
 
 ```js
 [
@@ -69,7 +69,7 @@ Here's how default columns look like :
 ]
 ```
 
-If you want to change columns order or headers titles, make sure to pass a new array in ***columns*** prop with unchanged ==key== properties.
+If you want to change columns order or headers titles, make sure to pass a new array in ***columns*** prop with unchanged **key** properties.
 
 ```js
 <Table data={employeesSelector} columns={newArray} />
@@ -77,7 +77,7 @@ If you want to change columns order or headers titles, make sure to pass a new a
 
 ### On another App
 
-To install this package on another App, you need to pass a customized array in ***columns*** prop with ==key== values matching data keys in string.
+To install this package on another App, you need to pass a customized array in ***columns*** prop with **key** values matching data keys in string.
 
 For example, with this data array :
 
@@ -100,5 +100,5 @@ You should set your columns array as following :
 ```
 
 Finally, for dates sorting to work, be careful to :
-- Include _date_ (case insensitive, e.g., _release**Date**_) in data property key and corresponding columns ==key== value
+- Include _date_ (case insensitive, e.g., _release**Date**_) in data property key
 - Format values as _MM/DD/YYYY_ strings

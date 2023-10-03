@@ -1,5 +1,6 @@
 import React from 'react'
 
+// Special row rendering info text in case of empty data or unsuccessful search
 export default function NoDataRow({ noData, noMatch }) {
   return (
     <>

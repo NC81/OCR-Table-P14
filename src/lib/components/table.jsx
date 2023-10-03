@@ -8,6 +8,7 @@ import Head from './layouts/head'
 import Row from './layouts/row'
 import '../index.css'
 
+// Parent component rendering whole table
 export default function Table({ data, columns = defaultColumns }) {
   const refData = useRef(data)
   const [baseList, setBaseList] = useState(data)
@@ -33,7 +34,7 @@ export default function Table({ data, columns = defaultColumns }) {
     })
   }
 
-  // Number of pages required to render all data
+  // Number of pages required to render every rows with entries state
   const pages = Math.ceil(baseList.length / entries)
 
   // Start/end indexes defining range for rendered list

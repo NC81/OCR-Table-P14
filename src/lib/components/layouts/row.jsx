@@ -1,5 +1,6 @@
 import React, { memo } from 'react'
 
+// Classic row rendering list data object
 export default memo(function Row({ data, index, sortKey, columns }) {
   return (
     <tr
