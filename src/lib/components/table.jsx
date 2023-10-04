@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { filterList, sortList } from '../utils/format/format'
-import { defaultColumns } from '../utils/columns'
+import { filterList, sortList } from '../utils/format'
 import NoDataRow from './layouts/no-data-row'
 import Buttons from './layouts/buttons'
 import Head from './layouts/head'
@@ -9,7 +8,7 @@ import Row from './layouts/row'
 import '../index.css'
 
 // Parent component rendering whole table
-export default function Table({ data, columns = defaultColumns }) {
+export default function Table({ data, columns }) {
   const refData = useRef(data)
   const [baseList, setBaseList] = useState(data)
   const [filteredList, setFilteredList] = useState([])
@@ -34,14 +33,14 @@ export default function Table({ data, columns = defaultColumns }) {
     })
   }
 
-  // Number of pages required to render every rows with entries state
+  // Number of pages required to render every rows
   const pages = Math.ceil(baseList.length / entries)
 
-  // Start/end indexes defining range for rendered list
+  // Start/end indexes defining range of baseList to render correct rows
   const sliceStartIndex = currentPage * entries - entries
   const sliceEndIndex = currentPage * entries
 
-  // When data prop is updated, set refData and rendered list
+  // When data prop is updated, store data in refData and set baseList
   useEffect(() => {
     if (data.length > refData.current.length) {
       refData.current = data
@@ -50,7 +49,7 @@ export default function Table({ data, columns = defaultColumns }) {
     }
   }, [data, baseList, entries])
 
-  // When search and sort states are updated, go to first page, sort list and set rendered list
+  // When search and sort states are updated, go to first page, sort list and set baseList
   useEffect(() => {
     setCurrentPage(1)
     const activeList = search.length > 0 ? filteredList : refData.current

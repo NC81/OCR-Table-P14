@@ -1,4 +1,4 @@
-export const initialList = [
+export const mockList4 = [
   {
     firstName: 'Arthur',
     lastName: 'Lame',
@@ -229,5 +229,38 @@ export const initialList = [
     city: 'Yorkshire',
     state: 'UT',
     zip: '48236',
+  },
+  {
+    firstName: 'John',
+    lastName: 'Smith',
+    startDate: '10/10/2021',
+    department: 'Sales',
+    birthDate: '12/19/1996',
+    street: '155 Square Garden',
+    city: 'Eagle Pass',
+    state: 'VT',
+    zip: '84927',
+  },
+  {
+    firstName: 'Misha',
+    lastName: 'Tate',
+    startDate: '02/11/2022',
+    department: 'Engineering',
+    birthDate: '12/12/1992',
+    street: '11 Grand Avenue',
+    city: 'Valparaiso',
+    state: 'PA',
+    zip: '84627',
+  },
+  {
+    firstName: 'Donald',
+    lastName: 'Mick',
+    startDate: '11/02/2023',
+    department: 'Sales',
+    birthDate: '05/06/1990',
+    street: '5 Star Route',
+    city: 'Saugus',
+    state: 'MP',
+    zip: '84763',
   },
 ]

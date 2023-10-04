@@ -1,7 +1,6 @@
 # OCR-Table-P14
 
-This student project is a React Table library converted from this [jQuery plugin](https://github.com/DataTables/DataTables.git) and intended to work with [P14 App](https://github.com/NC81/NicolasCandeli_14_08092023.git).
-It can also work on any React App provided ***columns*** prop is [properly configured](#on-another-app).
+This student project is a React Table library converted from this [jQuery plugin](https://github.com/DataTables/DataTables.git).
 
 ## Technologies
 
@@ -14,10 +13,10 @@ It can also work on any React App provided ***columns*** prop is [properly confi
 
 ## Features
 
+- Sort (texts, numbers and dates)
 - Entries selection
-- Pagination
+- Pagination with info text
 - Search
-- Sort texts, numbers and dates
 - Good accessibility
 
 ## Installation
@@ -26,70 +25,29 @@ It can also work on any React App provided ***columns*** prop is [properly confi
 
 ## Usage
 
-### On P14 App
-
-In _src/pages/employees-list.jsx_ :
-
-```js
-import { useSelector } from 'react-redux'
-import { employees } from '../features/employees'
-import { Table } from 'ocr-table-p14'
-
-export default function EmployeesList() {
-  const employeesSelector = useSelector(employees)
-
-  return (
-    <div className="page-wrapper">
-      <Table data={employeesSelector} />
-    </div>
-  )
-}
-```
-
-#### Optional
-
-As columns are already configured with a default prop for [P14 App](https://github.com/NC81/NicolasCandeli_14_08092023.git), defining ***columns*** prop is not required.
-
-Here's how default columns look like :
-
-- **key** gives access to data object properties
-- **header** defines rendered columns titles
-
-```js
-[
-  { key: 'firstName', header: 'First Name' },
-  { key: 'lastName', header: 'Last Name' },
-  { key: 'startDate', header: 'Start Date' },
-  { key: 'department', header: 'Department' },
-  { key: 'birthDate', header: 'Date of Birth' },
-  { key: 'street', header: 'Street' },
-  { key: 'city', header: 'City' },
-  { key: 'state', header: 'State' },
-  { key: 'zip', header: 'Zip Code' },
-]
-```
-
-If you want to change columns order or headers titles, make sure to pass a new array in ***columns*** prop with unchanged **key** properties.
-
-```js
-<Table data={employeesSelector} columns={newArray} />
-```
-
-### On another App
-
-To install this package on another App, you need to pass a customized array in ***columns*** prop with **key** values matching data keys in string.
-
-For example, with this data array :
+### Define data prop
 
 ```js
 [
   { title: 'Alien ', releaseDate: '09/12/1979', rating: '5' },
   { title: 'Blade Runner', releaseDate: '09/15/1982', rating: '5' },
-  ...
+  { title: 'Brazil', releaseDate: '12/18/1985', rating: '5' },
+  { title: 'Soylent Green', releaseDate: '04/19/1973', rating: '5' },
 ]
 ```
 
-You should set your columns array as following :
+**data** is an array of objects representing rows.
+
+Each property refers to a column.
+
+To make dates sorting work, just be careful to :
+
+- Include _date_ (case insensitive : e.g., _releaseDate_) in property key
+- Format values as _MM/DD/YYYY_ strings
+
+### Define **columns** prop
+
+Provided you have passed the previous **data** array, you should set your **columns** array as following :
 
 ```js
 [
@@ -99,6 +57,35 @@ You should set your columns array as following :
 ]
 ```
 
-Finally, for dates sorting to work, be careful to :
-- Include _date_ (case insensitive : e.g., _releaseDate_) in data property key
-- Format values as _MM/DD/YYYY_ strings
+- **key** serves as accessors providing access to data object properties.
+- **header** defines corresponding columns titles.
+
+### Place Table in your App
+
+```js
+import { Table } from 'ocr-table-p14'
+
+function App() {
+
+  const dataArray = [
+    { title: 'Alien ', releaseDate: '09/12/1979', rating: '5' },
+    { title: 'Blade Runner', releaseDate: '09/15/1982', rating: '5' },
+    { title: 'Brazil', releaseDate: '12/18/1985', rating: '5' },
+    { title: 'Soylent Green', releaseDate: '04/19/1973', rating: '5' },
+  ]
+
+  const columnsArray = [
+    { key: 'title', header: 'Title' },
+    { key: 'releaseDate', header: 'Release Date' },
+    { key: 'rating', header: 'Our review' },
+  ]
+
+  return <Table data={dataArray} columns={columnsArray} />
+}
+```
+
+### Update live data
+
+When data is updated, **ocr-table-p14** will render last addition without re-rendering previous rows.
+
+Just make sure one object is added at a time to render it live.

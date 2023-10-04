@@ -1,4 +1,4 @@
-export const listUpdate2 = [
+export const mockList3 = [
   {
     firstName: 'Arthur',
     lastName: 'Lame',

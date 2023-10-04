@@ -1,19 +1,19 @@
 import '@testing-library/jest-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { initialList } from './list'
-import Container from './mock-page'
+import { mockList1 } from '../mock/lists/mock-list-1'
+import MockPage from './mock-page'
 
 describe('Given I am a user with the table displayed', () => {
   describe('when the list receive a new entry', () => {
     it('should add a new row at the end of the table', async () => {
       const user = userEvent.setup()
-      render(<Container />)
+      render(<MockPage />)
 
       const buttons = screen.getAllByTestId('page-button')
       const lastButton = buttons[buttons.length - 1]
 
-      const lastPageElements = initialList.filter(
+      const lastPageElements = mockList1.filter(
         (el, index) => index > (buttons.length - 1) * 10 - 1
       )
 

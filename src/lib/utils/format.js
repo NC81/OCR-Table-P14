@@ -5,9 +5,12 @@
  * @returns { Array } Filtered array
  */
 export function filterList(list, string) {
-  const filteredList = list.filter(obj => Object.values(obj).some(ele => ele.toLowerCase().includes(string.toLowerCase())));
-  // console.log('filteredList', filteredList)
-  return filteredList;
+  const filteredList = list.filter((obj) =>
+    Object.values(obj).some((ele) =>
+      ele.toLowerCase().includes(string.toLowerCase())
+    )
+  )
+  return filteredList
 }
 
 /**
@@ -19,35 +22,35 @@ export function filterList(list, string) {
  */
 export function sortList(list, key, direction) {
   if (key.toLowerCase().includes('date')) {
-    const dateArray = list.map(el => {
-      const newDate = new Date(el[key]);
-      return {
-        ...el,
-        newDate: newDate
-      };
-    });
-    const sortedDateArray = dateArray.sort((a, b) => a.newDate - b.newDate);
-    sortedDateArray.forEach(object => {
-      delete object['newDate'];
-    });
+    const dateArray = list.map((el) => {
+      const newDate = new Date(el[key])
+      return { ...el, newDate: newDate }
+    })
+    const sortedDateArray = dateArray.sort((a, b) => a.newDate - b.newDate)
+    sortedDateArray.forEach((object) => {
+      delete object['newDate']
+    })
+
     if (direction === 'descending') {
-      return sortedDateArray.reverse();
+      return sortedDateArray.reverse()
     }
-    return sortedDateArray;
+    return sortedDateArray
   }
+
   const sortedArray = list.sort((a, b) => {
     if (a[key] < b[key]) {
-      return -1;
+      return -1
     }
     if (a[key] > b[key]) {
-      return 1;
+      return 1
     }
-    return 0;
-  });
+    return 0
+  })
+
   if (direction === 'descending') {
-    return sortedArray.reverse();
+    return sortedArray.reverse()
   }
-  return sortedArray;
+  return sortedArray
 }
 
 /**
@@ -56,11 +59,12 @@ export function sortList(list, key, direction) {
  * @returns { Array } Array whose length equals the integer
  */
 export function convertIntegerInArray(chunksNumber) {
-  let i = 0;
-  let arrayOfIntegers = [];
+  let i = 0
+  let arrayOfIntegers = []
+
   while (i < chunksNumber) {
-    i++;
-    arrayOfIntegers.push(i);
+    i++
+    arrayOfIntegers.push(i)
   }
-  return arrayOfIntegers;
+  return arrayOfIntegers
 }

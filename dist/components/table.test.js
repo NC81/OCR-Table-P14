@@ -1,31 +1,33 @@
 import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { initialList } from '../../mock/list';
-import { sortList, filterList } from '../utils/format/format';
-import { defaultColumns } from '../utils/columns';
+import { mockList1 } from '../../mock/lists/mock-list-1';
+import { sortList, filterList } from '../utils/format';
+import { mockColumns } from '../../mock/mock-columns';
 import { act } from 'react-dom/test-utils';
 import Table from './table';
 describe('Given the table is displayed', () => {
   it('should render all the headers', () => {
     render( /*#__PURE__*/React.createElement(Table, {
-      data: initialList
+      data: mockList1,
+      columns: mockColumns
     }));
-    const propertiesNumber = Object.keys(initialList[0]).length;
+    const propertiesNumber = Object.keys(mockList1[0]).length;
     const headColumns = screen.getAllByTestId('head-column');
     expect(headColumns.length).toBe(propertiesNumber);
     const headerTitleContainers = screen.getAllByTestId('header-title');
     const renderedHeaders = headerTitleContainers.map(el => {
       return el.textContent;
     });
-    const dataHeaders = defaultColumns.map(el => {
+    const dataHeaders = mockColumns.map(el => {
       return el.header;
     });
     expect(renderedHeaders).toEqual(dataHeaders);
   });
   it('should render all the required tools', () => {
     render( /*#__PURE__*/React.createElement(Table, {
-      data: initialList
+      data: mockList1,
+      columns: mockColumns
     }));
     expect(screen.getByTestId('entries-select')).toBeInTheDocument();
     expect(screen.getByTestId('search-input')).toBeInTheDocument();
@@ -35,7 +37,8 @@ describe('Given the table is displayed', () => {
 describe('Given the data list is empty', () => {
   it('should render an appropriate message', async () => {
     render( /*#__PURE__*/React.createElement(Table, {
-      data: []
+      data: [],
+      columns: mockColumns
     }));
     await waitFor(() => expect(screen.queryAllByTestId('row').length).toBe(0));
     expect(screen.getByText('No data available in table...')).toBeInTheDocument();
@@ -44,7 +47,8 @@ describe('Given the data list is empty', () => {
 describe('Given the data list is not empty', () => {
   it('should render default number of rows with the corresponding info text', async () => {
     render( /*#__PURE__*/React.createElement(Table, {
-      data: initialList
+      data: mockList1,
+      columns: mockColumns
     }));
     const rows = screen.getAllByTestId('row');
     const optionsList = screen.getAllByRole('option');
@@ -56,13 +60,14 @@ describe('Given the data list is not empty', () => {
   });
   it('should sort rows in ascending order by the first property', () => {
     render( /*#__PURE__*/React.createElement(Table, {
-      data: initialList
+      data: mockList1,
+      columns: mockColumns
     }));
     expect(screen.getAllByTestId('head-column')[0].getAttribute('aria-sort')).toBe('ascending');
     const headColumns = screen.getAllByTestId('head-column');
     const order = headColumns[0].getAttribute('aria-sort');
     expect(order).toBe('ascending');
-    const sortedList = sortList(initialList, 'firstName', 'ascending');
+    const sortedList = sortList(mockList1, 'firstName', 'ascending');
     const firstPageElements = sortedList.filter((el, index) => index < 10);
     const firstPageFirstNames = firstPageElements.map(el => {
       return el.firstName;
@@ -75,7 +80,8 @@ describe('Given the data list is not empty', () => {
   });
   it('should render the appropriate number of page buttons', async () => {
     render( /*#__PURE__*/React.createElement(Table, {
-      data: initialList
+      data: mockList1,
+      columns: mockColumns
     }));
     const buttons = screen.getAllByTestId('page-button');
     const ariaCurrentFirstButton = buttons[0].getAttribute('aria-current');
@@ -88,11 +94,12 @@ describe('Given I want to sort the table', () => {
     it('should sort rows in descending order', async () => {
       const user = userEvent.setup();
       render( /*#__PURE__*/React.createElement(Table, {
-        data: initialList
+        data: mockList1,
+        columns: mockColumns
       }));
       user.click(screen.getAllByTestId('head-column')[0]);
       await waitFor(() => expect(screen.getAllByTestId('head-column')[0].getAttribute('aria-sort')).toBe('descending'));
-      const sortedList = sortList(initialList, 'firstName', 'descending');
+      const sortedList = sortList(mockList1, 'firstName', 'descending');
       const firstPageElements = sortedList.filter((el, index) => index < 10);
       const firstPagelastNames = firstPageElements.map(el => {
         return el.lastName;
@@ -104,14 +111,15 @@ describe('Given I want to sort the table', () => {
     describe('when the second header is focused and I press enter', () => {
       it('should sort rows in ascending order', async () => {
         render( /*#__PURE__*/React.createElement(Table, {
-          data: initialList
+          data: mockList1,
+          columns: mockColumns
         }));
         const lastNameHeader = screen.getAllByTestId('head-column')[1];
         lastNameHeader.focus();
         expect(lastNameHeader).toHaveFocus();
         userEvent.keyboard('{Enter}');
         await waitFor(() => expect(lastNameHeader.getAttribute('aria-sort')).toBe('ascending'));
-        const sortedList = sortList(initialList, 'lastName', 'ascending');
+        const sortedList = sortList(mockList1, 'lastName', 'ascending');
         const firstPageElements = sortedList.filter((el, index) => index < 10);
         const firstPagelastNames = firstPageElements.map(el => {
           return el.lastName;
@@ -127,7 +135,8 @@ describe('Given I select the second entries value', () => {
   it('should render the appropriate number of rows and update info text', async () => {
     const user = userEvent.setup();
     render( /*#__PURE__*/React.createElement(Table, {
-      data: initialList
+      data: mockList1,
+      columns: mockColumns
     }));
     const select = screen.getByTestId('entries-select');
     const secondOption = screen.getByTestId('option-25');
@@ -135,7 +144,7 @@ describe('Given I select the second entries value', () => {
       user.selectOptions(select, secondOption);
     });
     await waitFor(() => expect(secondOption.selected).toBe(true));
-    await waitFor(() => expect(screen.getAllByTestId('row').length).toBe(initialList.length));
+    await waitFor(() => expect(screen.getAllByTestId('row').length).toBe(mockList1.length));
     expect(screen.getByTestId('table-info')).toHaveTextContent('Showing 1 to 21 of 21 entries');
   });
 });
@@ -144,9 +153,10 @@ describe('Given I want to navigate between pages', () => {
     it('should render the correct shunk of data and update info text', async () => {
       const user = userEvent.setup();
       render( /*#__PURE__*/React.createElement(Table, {
-        data: initialList
+        data: mockList1,
+        columns: mockColumns
       }));
-      const sortedList = sortList(initialList, 'firstName', 'ascending');
+      const sortedList = sortList(mockList1, 'firstName', 'ascending');
       const buttons = screen.getAllByTestId('page-button');
       const lastPageElements = sortedList.filter((el, index) => index > (buttons.length - 1) * 10 - 1);
       const lastPageCities = lastPageElements.map(el => {
@@ -166,9 +176,10 @@ describe('Given I want to navigate between pages', () => {
     it('should render the correct shunk of data and update info text', async () => {
       const user = userEvent.setup();
       render( /*#__PURE__*/React.createElement(Table, {
-        data: initialList
+        data: mockList1,
+        columns: mockColumns
       }));
-      const sortedList = sortList(initialList, 'firstName', 'ascending');
+      const sortedList = sortList(mockList1, 'firstName', 'ascending');
       const secondPageElements = sortedList.filter((el, index) => index > 9 && index < 20);
       const secondPageBirthDates = secondPageElements.map(el => {
         return el.birthDate;
@@ -196,11 +207,12 @@ describe('Given I type text in search input', () => {
   it('should filter rows accordingly', async () => {
     const user = userEvent.setup();
     render( /*#__PURE__*/React.createElement(Table, {
-      data: initialList
+      data: mockList1,
+      columns: mockColumns
     }));
     const input = screen.getByTestId('search-input');
     const stringToSearch = 'chris';
-    const filteredList = filterList(initialList, stringToSearch);
+    const filteredList = filterList(mockList1, stringToSearch);
     user.type(input, stringToSearch);
     await waitFor(() => expect(screen.getAllByTestId('row').length).toBe(filteredList.length));
     const rows = screen.getAllByTestId('row');
@@ -212,11 +224,12 @@ describe('Given I type text in search input', () => {
     it('should render an appropriate message', async () => {
       const user = userEvent.setup();
       render( /*#__PURE__*/React.createElement(Table, {
-        data: initialList
+        data: mockList1,
+        columns: mockColumns
       }));
       const input = screen.getByTestId('search-input');
       const stringToSearch = 'aaa';
-      const filteredList = filterList(initialList, stringToSearch);
+      const filteredList = filterList(mockList1, stringToSearch);
       expect(filteredList.length).toBe(0);
       user.type(input, stringToSearch);
       await waitFor(() => expect(screen.queryAllByTestId('row').length).toBe(0));

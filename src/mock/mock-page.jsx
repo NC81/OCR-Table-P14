@@ -1,29 +1,30 @@
 import { useState } from 'react'
 import Table from '../lib/components/table'
-import { initialList } from './list'
-import { listUpdate1 } from './list-update-1'
-import { listUpdate2 } from './list-update-2'
-import { listUpdate3 } from './list-update-3'
+import { mockList1 } from './lists/mock-list-1'
+import { mockList2 } from './lists/mock-list-2'
+import { mockList3 } from './lists/mock-list-3'
+import { mockList4 } from './lists/mock-list-4'
+import { mockColumns } from './mock-columns'
 
 export default function MockPage() {
-  const [list, setList] = useState(initialList)
+  const [list, setList] = useState(mockList1)
 
   return (
     <div>
       <button
         data-testid="mock-update-button"
         onClick={() => {
-          setList(listUpdate1)
+          setList(mockList2)
         }}
       >
         Update 1
       </button>
       <br />
-      <button onClick={() => setList(listUpdate2)}>Update 2</button>
+      <button onClick={() => setList(mockList3)}>Update 2</button>
       <br />
-      <button onClick={() => setList(listUpdate3)}>Update 3</button>
+      <button onClick={() => setList(mockList4)}>Update 3</button>
       <br />
-      <Table data={list} />
+      <Table data={list} columns={mockColumns} />
     </div>
   )
 }
