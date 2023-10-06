@@ -46,7 +46,7 @@ describe('Given the data list is empty', () => {
 })
 
 describe('Given the data list is not empty', () => {
-  it('should render default number of rows with the corresponding info text', async () => {
+  it('should render default number of rows with the corresponding info text', () => {
     render(<Table data={mockList1} columns={mockColumns} />)
 
     const rows = screen.getAllByTestId('row')
@@ -85,7 +85,7 @@ describe('Given the data list is not empty', () => {
     expect(renderedFirstNames).toEqual(firstPageFirstNames)
   })
 
-  it('should render the appropriate number of page buttons', async () => {
+  it('should render the appropriate number of page buttons', () => {
     render(<Table data={mockList1} columns={mockColumns} />)
 
     const buttons = screen.getAllByTestId('page-button')

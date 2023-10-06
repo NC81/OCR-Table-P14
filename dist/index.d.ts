@@ -1,0 +1,1 @@
+declare module 'ocr-table-p14'
