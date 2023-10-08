@@ -26,8 +26,7 @@ export default function Head({
     "aria-sort": key === sort.key ? sort.direction : 'none',
     "aria-controls": "table",
     tabIndex: "0",
-    "data-testid": "head-column"
-  }, /*#__PURE__*/React.createElement("div", {
+    "data-testid": "head-column",
     className: "table-header"
   }, /*#__PURE__*/React.createElement("span", {
     "data-testid": "header-title"
@@ -35,5 +34,5 @@ export default function Head({
     className: `sort-icon ${key === sort.key ? sort.direction : ''}`,
     src: key === sort.key ? sortingArrowOrder : sortingArrowDisabled,
     alt: key === sort.key ? `Sorted in ${sort.direction} order` : 'Sort'
-  })))));
+  }))));
 }

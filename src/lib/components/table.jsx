@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { filterList, sortList } from '../utils/format'
 import NoDataRow from './layouts/no-data-row'
-import Buttons from './layouts/buttons'
+import PageButtons from './layouts/buttons'
 import Head from './layouts/head'
 import Row from './layouts/row'
 import '../index.css'
@@ -63,9 +63,9 @@ export default function Table({ data, columns }) {
   }, [entries])
 
   return (
-    <div>
+    <div className="table-wrapper">
       <div className="table-top">
-        <div>
+        <div className="entries-wrapper">
           <label htmlFor="entries-select">Entries to display:</label>
           <select
             id="entries-select"
@@ -86,7 +86,7 @@ export default function Table({ data, columns }) {
             <option value="100">100</option>
           </select>{' '}
         </div>
-        <div>
+        <div className="search-wrapper">
           <label htmlFor="search-input">Search:</label>
           <input
             value={search}
@@ -106,8 +106,8 @@ export default function Table({ data, columns }) {
         </div>
       </div>
       <table
-        className="table"
-        id="table"
+        className="table-content"
+        id="table-content"
         role="grid"
         aria-describedby="table-info"
       >
@@ -148,7 +148,7 @@ export default function Table({ data, columns }) {
                 currentPage === pages ? baseList.length : currentPage * entries
               } of ${baseList.length} entries`}
         </span>
-        <Buttons
+        <PageButtons
           currentPage={currentPage}
           pages={pages}
           length={baseList.length}

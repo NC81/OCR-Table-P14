@@ -1,15 +1,19 @@
 .table-top,
 .table-bottom {
+  position: relative;
   display: flex;
   justify-content: space-between;
 }
 
-.table-top div {
-  display: flex;
-  align-items: center;
+.entries-select {
+  width: 70px;
 }
 
-.table {
+.search-input {
+  width: 160px;
+}
+
+.table-content {
   width: 100%;
   margin: 15px 0 15px;
 }
@@ -25,17 +29,17 @@
 
 .no-data-text {
   text-align: center;
-  background-color: #f7b6b6;
+  background-color: #ffb8b8b5;
 }
 
 .table-header {
   cursor: pointer;
   user-select: none;
   width: max-content;
+  color: #616161;
 }
 
 .table-header span {
-  color: #616161;
   margin-right: 4px;
 }
 
@@ -45,6 +49,7 @@
 
 .sort-icon {
   width: 12px;
+  height: 12px;
 }
 
 .ascending {
@@ -63,8 +68,8 @@
 .page-button {
   border: none;
   cursor: pointer;
-  width: 25px;
-  height: 25px;
+  min-width: 30px;
+  height: 30px;
 }
 
 .page-button:hover:not(.page-button-active) {
@@ -77,16 +82,13 @@
   color: white;
 }
 
+.previous-next-wrapper {
+  position: absolute;
+  right: calc(50% - 40px);
+}
+
 .previous-next-button {
-  width: fit-content;
-}
-
-.entries-select {
-  width: 70px;
-}
-
-.search-input {
-  width: 160px;
+  width: 80px;
 }
 
 .table-info {

@@ -25,17 +25,16 @@ export default function Head({ sort, handleHeaderClick, columns }) {
           aria-controls="table"
           tabIndex="0"
           data-testid="head-column"
+          className="table-header"
         >
-          <div className="table-header">
-            <span data-testid="header-title">{header}</span>
-            <img
-              className={`sort-icon ${key === sort.key ? sort.direction : ''}`}
-              src={key === sort.key ? sortingArrowOrder : sortingArrowDisabled}
-              alt={
-                key === sort.key ? `Sorted in ${sort.direction} order` : 'Sort'
-              }
-            />
-          </div>
+          <span data-testid="header-title">{header}</span>
+          <img
+            className={`sort-icon ${key === sort.key ? sort.direction : ''}`}
+            src={key === sort.key ? sortingArrowOrder : sortingArrowDisabled}
+            alt={
+              key === sort.key ? `Sorted in ${sort.direction} order` : 'Sort'
+            }
+          />
         </th>
       ))}
     </tr>

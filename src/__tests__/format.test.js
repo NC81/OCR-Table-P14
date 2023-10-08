@@ -1,5 +1,9 @@
 import '@testing-library/jest-dom'
-import { sortList, filterList, convertIntegerInArray } from './format'
+import {
+  sortList,
+  filterList,
+  convertIntegerInArray,
+} from '../lib/utils/format'
 
 const arrayToTest = [
   { firstName: 'Feargus', birthDate: '04/19/1970' },

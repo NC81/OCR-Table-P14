@@ -50,16 +50,45 @@ export function sortList(list, key, direction) {
 }
 
 /**
- * Create an array whose length corresponds to the number of desired page buttons
- * @param { Integer } integer Number of chunks representing page buttons to render
- * @returns { Array } Array whose length equals the integer
+ * Create an array of elements representing page buttons rendered values
+ * @param { Integer } currentPage Current page required to define current chunk of 10 pages
+ * @param { Integer } pages Total pages required to define last chunk of 10 pages
+ * @returns { Array } Array of page buttons values
  */
-export function convertIntegerInArray(chunksNumber) {
-  let i = 0;
-  let arrayOfIntegers = [];
-  while (i < chunksNumber) {
-    i++;
-    arrayOfIntegers.push(i);
+
+export function createButtonsValues(currentPage, pages) {
+  console.log('currentpage', currentPage);
+  console.log('pages', pages);
+  const currentChunk = Math.ceil(currentPage / 10);
+  const lastCHunk = Math.ceil(pages / 10);
+  console.log('currentChunk', currentChunk);
+  console.log('lastCHunk', lastCHunk);
+  let buttonsValues = [];
+  if (pages <= 10) {
+    console.log('test1');
+    for (let i = 1; i <= pages; i++) {
+      buttonsValues.push(i);
+    }
+  } else if (currentPage <= 10 && pages > 10) {
+    console.log('test2');
+    for (let i = 1; i <= 10; i++) {
+      buttonsValues.push(i);
+    }
+    buttonsValues.push('+', pages);
+  } else if (currentPage > 10 && currentChunk < lastCHunk) {
+    console.log('test3');
+    buttonsValues.push(1, '-');
+    for (let i = currentChunk * 10 - 9; i <= currentChunk * 10; i++) {
+      buttonsValues.push(i);
+    }
+    buttonsValues.push('+', pages);
+  } else if (currentPage > 10 && currentChunk === lastCHunk) {
+    console.log('test4');
+    buttonsValues.push(1, '-');
+    for (let i = currentChunk * 10 - 9; i <= pages; i++) {
+      buttonsValues.push(i);
+    }
   }
-  return arrayOfIntegers;
+  console.log('arrayOfIntegers2', buttonsValues);
+  return buttonsValues;
 }

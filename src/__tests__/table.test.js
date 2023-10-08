@@ -1,11 +1,11 @@
 import '@testing-library/jest-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { mockList1 } from '../../mock/lists/mock-list-1'
-import { sortList, filterList } from '../utils/format'
-import { mockColumns } from '../../mock/mock-columns'
+import { mockList1 } from '../mock/lists/mock-list-1'
+import { sortList, filterList } from '../lib/utils/format'
+import { mockColumns } from '../mock/mock-columns'
 import { act } from 'react-dom/test-utils'
-import Table from './table'
+import Table from '../lib/components/table'
 
 describe('Given the table is displayed', () => {
   it('should render all the headers', () => {

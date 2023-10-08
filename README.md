@@ -45,7 +45,7 @@ To make dates sorting work, just be careful to :
 - Include _date_ (case insensitive : e.g., _releaseDate_) in property key
 - Format values as _MM/DD/YYYY_ strings
 
-### Define **columns** prop
+### Define columns prop
 
 Provided you have passed the previous **data** array, you should set your **columns** array as following :
 
@@ -57,8 +57,8 @@ Provided you have passed the previous **data** array, you should set your **colu
 ]
 ```
 
-- **key** serves as accessors providing access to data object properties.
-- **header** defines corresponding columns titles.
+- **key** serves as accessors providing access to data object properties
+- **header** defines corresponding columns titles
 
 ### Place Table in your App
 

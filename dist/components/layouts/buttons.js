@@ -1,34 +1,45 @@
 import React from 'react';
-import { convertIntegerInArray } from '../../utils/format';
+import { createButtonsValues } from '../../utils/format';
 
 // Page buttons group composed of numbered and previous/next buttons
-export default function Buttons({
+export default function PageButtons({
   currentPage,
   pages,
   length,
   setCurrentPage
 }) {
-  return /*#__PURE__*/React.createElement("div", null, length > 1 && currentPage > 1 && /*#__PURE__*/React.createElement("button", {
+  function operatorSetCurrentPage(currentPage, string) {
+    if (string === '-') {
+      setCurrentPage(currentPage - 10);
+    } else {
+      setCurrentPage(currentPage + 10 > pages ? pages : currentPage + 10);
+    }
+  }
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "previous-next-wrapper"
+  }, length > 1 && currentPage > 1 && /*#__PURE__*/React.createElement("button", {
     onClick: () => setCurrentPage(currentPage - 1),
     "aria-label": "previous page",
     "aria-controls": "table",
     tabIndex: "0",
     "data-testid": "previous-button",
     className: "page-button previous-next-button"
-  }, "Previous"), pages > 1 && convertIntegerInArray(pages).map((integer, index) => /*#__PURE__*/React.createElement("button", {
-    onClick: () => setCurrentPage(integer),
-    "data-testid": "page-button",
-    className: currentPage === index + 1 ? 'page-button page-button-active' : 'page-button',
-    key: `${integer}-${index}`,
-    "aria-controls": "table",
-    tabIndex: "0",
-    "aria-current": currentPage === index + 1 && 'page'
-  }, integer)), currentPage < pages && /*#__PURE__*/React.createElement("button", {
+  }, "Previous"), currentPage < pages && /*#__PURE__*/React.createElement("button", {
     onClick: () => setCurrentPage(currentPage + 1),
     "aria-label": "next page",
     "aria-controls": "table",
     tabIndex: "0",
     "data-testid": "next-button",
     className: "page-button previous-next-button"
-  }, "Next"));
+  }, "Next")), /*#__PURE__*/React.createElement("div", {
+    className: "numbered-wrapper"
+  }, pages > 1 && createButtonsValues(currentPage, pages).map((el, index) => /*#__PURE__*/React.createElement("button", {
+    onClick: () => typeof el !== 'number' ? operatorSetCurrentPage(currentPage, el) : setCurrentPage(el),
+    "data-testid": "page-button",
+    className: currentPage === el ? 'page-button page-button-active' : 'page-button',
+    key: `${el}-${index}`,
+    "aria-controls": "table",
+    tabIndex: "0",
+    "aria-current": currentPage === el && 'page'
+  }, el))));
 }

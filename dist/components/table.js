@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { filterList, sortList } from '../utils/format';
 import NoDataRow from './layouts/no-data-row';
-import Buttons from './layouts/buttons';
+import PageButtons from './layouts/buttons';
 import Head from './layouts/head';
 import Row from './layouts/row';
 import '../index.css';
@@ -59,9 +59,13 @@ export default function Table({
   useEffect(() => {
     setCurrentPage(1);
   }, [entries]);
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "table-wrapper"
+  }, /*#__PURE__*/React.createElement("div", {
     className: "table-top"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "entries-wrapper"
+  }, /*#__PURE__*/React.createElement("label", {
     htmlFor: "entries-select"
   }, "Entries to display:"), /*#__PURE__*/React.createElement("select", {
     id: "entries-select",
@@ -81,7 +85,9 @@ export default function Table({
     value: "50"
   }, "50"), /*#__PURE__*/React.createElement("option", {
     value: "100"
-  }, "100")), ' '), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+  }, "100")), ' '), /*#__PURE__*/React.createElement("div", {
+    className: "search-wrapper"
+  }, /*#__PURE__*/React.createElement("label", {
     htmlFor: "search-input"
   }, "Search:"), /*#__PURE__*/React.createElement("input", {
     value: search,
@@ -96,8 +102,8 @@ export default function Table({
     "data-testid": "search-input",
     className: "search-input"
   }))), /*#__PURE__*/React.createElement("table", {
-    className: "table",
-    id: "table",
+    className: "table-content",
+    id: "table-content",
     role: "grid",
     "aria-describedby": "table-info"
   }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement(Head, {
@@ -121,7 +127,7 @@ export default function Table({
     "aria-live": "polite",
     id: "table-info",
     className: "table-info"
-  }, baseList.length === 0 ? 'Showing no entries' : `Showing ${currentPage * entries + 1 - entries} to ${currentPage === pages ? baseList.length : currentPage * entries} of ${baseList.length} entries`), /*#__PURE__*/React.createElement(Buttons, {
+  }, baseList.length === 0 ? 'Showing no entries' : `Showing ${currentPage * entries + 1 - entries} to ${currentPage === pages ? baseList.length : currentPage * entries} of ${baseList.length} entries`), /*#__PURE__*/React.createElement(PageButtons, {
     currentPage: currentPage,
     pages: pages,
     length: baseList.length,

@@ -2,7 +2,7 @@ import '@testing-library/jest-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mockList1 } from '../mock/lists/mock-list-1'
-import MockPage from './mock-page'
+import MockPage from '../mock/mock-page'
 
 describe('Given I am a user with the table displayed', () => {
   describe('when the list receive a new entry', () => {
