@@ -2,13 +2,14 @@ import React from 'react';
 import sortingArrowOrder from '../../assets/sort-arrow-order.png';
 import sortingArrowDisabled from '../../assets/sort-arrow-disabled.png';
 
-// Head row rendering columns header titles with deep accessibility
+// Head row rendering columns titles with deep accessibility
 export default function Head({
   sort,
   handleHeaderClick,
   columns
 }) {
   return /*#__PURE__*/React.createElement("tr", {
+    className: "head-row",
     role: "row"
   }, columns.map(({
     header,

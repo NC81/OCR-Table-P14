@@ -1,9 +1,9 @@
 import React from 'react'
 import { createButtonsValuesList } from '../../utils/format'
 
-// Group of page buttons composed of numbered, ellipsis and previous/next buttons
+// Group of page buttons rendering numbered, ellipsis and 'previous'/'next' values
 export default function PageButtons({ currentPage, pages, setCurrentPage }) {
-  // Define current chunk and last chunk (one chunk equals 10 pages)
+  // Define current chunk and last chunk of 10 pages
   const currentChunk = Math.ceil(currentPage / 10)
   const lastCHunk = Math.ceil(pages / 10)
 
@@ -17,7 +17,7 @@ export default function PageButtons({ currentPage, pages, setCurrentPage }) {
             aria-controls="table"
             tabIndex="0"
             data-testid="previous-10-button"
-            className="page-button previous-next-button"
+            className="page-button previous-next-button previous-10"
           >
             {`<<`}
           </button>
@@ -29,7 +29,7 @@ export default function PageButtons({ currentPage, pages, setCurrentPage }) {
             aria-controls="table"
             tabIndex="0"
             data-testid="previous-button"
-            className="page-button previous-next-button"
+            className="page-button previous-next-button previous"
           >
             {`<`}
           </button>
@@ -41,7 +41,7 @@ export default function PageButtons({ currentPage, pages, setCurrentPage }) {
             aria-controls="table"
             tabIndex="0"
             data-testid="next-button"
-            className="page-button previous-next-button"
+            className="page-button previous-next-button next"
           >
             {`>`}
           </button>
@@ -57,7 +57,7 @@ export default function PageButtons({ currentPage, pages, setCurrentPage }) {
             aria-controls="table"
             tabIndex="0"
             data-testid="next-10-button"
-            className="page-button previous-next-button"
+            className="page-button previous-next-button next-10"
           >
             {`>>`}
           </button>

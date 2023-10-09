@@ -7,13 +7,13 @@ import Head from './layouts/head';
 import Row from './layouts/row';
 import '../index.css';
 
-// Parent component rendering whole table
+// Main component rendering whole table
 export default function Table({
   data,
   columns
 }) {
   const refData = useRef(data);
-  const [baseList, setBaseList] = useState(data);
+  const [baseList, setBaseList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [entries, setEntries] = useState(10);
@@ -23,7 +23,7 @@ export default function Table({
     direction: 'ascending'
   });
 
-  // Set new sort state on clicking headers
+  // Set new sort state on headers clicking
   function handleHeaderClick(header) {
     setSort({
       key: header,
@@ -34,7 +34,7 @@ export default function Table({
   // Number of pages required to render every rows
   const pages = Math.ceil(baseList.length / entries);
 
-  // Start/end indexes defining range of baseList to render correct rows
+  // Start/end indexes defining range of rows to render
   const sliceStartIndex = currentPage * entries - entries;
   const sliceEndIndex = currentPage * entries;
 
@@ -47,7 +47,7 @@ export default function Table({
     }
   }, [data, baseList, entries]);
 
-  // When search and sort states are updated, go to first page, sort list and set baseList
+  // When search and sort states are updated, go to first page and set baseList with sorted rows
   useEffect(() => {
     setCurrentPage(1);
     const activeList = search.length > 0 ? filteredList : refData.current;
@@ -130,7 +130,6 @@ export default function Table({
   }, baseList.length === 0 ? 'Showing no entries' : `Showing ${currentPage * entries + 1 - entries} to ${currentPage === pages ? baseList.length : currentPage * entries} of ${baseList.length} entries`), /*#__PURE__*/React.createElement(PageButtons, {
     currentPage: currentPage,
     pages: pages,
-    length: baseList.length,
     setCurrentPage: setCurrentPage
   })));
 }

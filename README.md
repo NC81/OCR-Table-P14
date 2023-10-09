@@ -9,6 +9,7 @@ This student project is a React Table library converted from this [jQuery plugin
 
 ## Dependencies
 
+- React
 - PropTypes
 
 ## Features

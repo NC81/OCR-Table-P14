@@ -1,6 +1,6 @@
 /**
- * Filter original list by string typed in search input
- * @param { Array } list Original array of objects passed as prop to Table component
+ * Filter list by string typed in search input
+ * @param { Array } list Array of objects passed as prop to Table component
  * @param { String } string String to be found in objects
  * @returns { Array } Filtered array
  */
@@ -62,35 +62,28 @@ export function sortList(list, key, direction) {
  */
 
 export function createButtonsValuesList(pages, currentChunk, lastCHunk) {
-  // console.log('currentChunk', currentChunk)
-  // console.log('lastCHunk', lastCHunk)
   let buttonsValues = []
 
   if (pages <= 10) {
-    console.log('test1')
     for (let i = 1; i <= pages; i++) {
       buttonsValues.push(i)
     }
   } else if (currentChunk === 1 && lastCHunk > 1) {
-    console.log('test2')
     for (let i = 1; i <= 10; i++) {
       buttonsValues.push(i)
     }
     buttonsValues.push('...', pages)
   } else if (currentChunk > 1 && currentChunk < lastCHunk) {
-    console.log('test3')
     buttonsValues.push(1, '...')
     for (let i = currentChunk * 10 - 9; i <= currentChunk * 10; i++) {
       buttonsValues.push(i)
     }
     buttonsValues.push('...', pages)
   } else if (currentChunk > 1 && currentChunk === lastCHunk) {
-    console.log('test4')
     buttonsValues.push(1, '...')
     for (let i = currentChunk * 10 - 9; i <= pages; i++) {
       buttonsValues.push(i)
     }
   }
-  console.log('arrayOfIntegers2', buttonsValues)
   return buttonsValues
 }
