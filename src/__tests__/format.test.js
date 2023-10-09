@@ -2,7 +2,7 @@ import '@testing-library/jest-dom'
 import {
   sortList,
   filterList,
-  convertIntegerInArray,
+  createButtonsValuesList,
 } from '../lib/utils/format'
 
 const arrayToTest = [
@@ -50,10 +50,43 @@ describe('Given I want filterList() to filter an array by case insensitive strin
   })
 })
 
-describe('Given I want convertIntegerInArray() to create an array whose length equals an integer', () => {
-  it('should create an array with correct length', () => {
-    const arrayToInteger = convertIntegerInArray(3)
-    const expectedArray = [1, 2, 3]
-    expect(arrayToInteger).toEqual(expectedArray)
+describe('Given I want createButtonsValuesList() to create buttons values list', () => {
+  describe('when there are 7 pages and the current chunk is 1', () => {
+    it('should create the correct array composed of integers and ellipsis', () => {
+      const arrayToInteger = createButtonsValuesList(7, 1, 1)
+      const expectedArray = [1, 2, 3, 4, 5, 6, 7]
+      expect(arrayToInteger).toEqual(expectedArray)
+    })
+  })
+
+  describe('when there are 11 pages and the current chunk is 1', () => {
+    it('should create the correct array composed of integers and ellipsis', () => {
+      const arrayToInteger = createButtonsValuesList(11, 1, 2)
+      const expectedArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, '...', 11]
+      expect(arrayToInteger).toEqual(expectedArray)
+    })
+  })
+
+  describe('when there are 21 pages and the current chunk is 2', () => {
+    it('should create an array composed of integers with two ellipsis', () => {
+      const arrayToInteger = createButtonsValuesList(21, 2, 3)
+      const expectedArray = [
+        1,
+        '...',
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        '...',
+        21,
+      ]
+      expect(arrayToInteger).toEqual(expectedArray)
+    })
   })
 })

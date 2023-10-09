@@ -54,19 +54,16 @@ export function sortList(list, key, direction) {
 }
 
 /**
- * Create an array of elements representing page buttons rendered values
- * @param { Integer } currentPage Current page required to define current chunk of 10 pages
- * @param { Integer } pages Total pages required to define last chunk of 10 pages
- * @returns { Array } Array of page buttons values
+ * Create an array of elements composed of numbers and ellipsis defining page buttons values
+ * @param { Integer } pages Total pages
+ * @param { Integer } currentChunk Current chunk of 10 pages
+ * @param { Integer } lastCHunk Last chunk of 10 pages
+ * @returns { Array } Array of page buttons rendered values
  */
 
-export function createButtonsValues(currentPage, pages) {
-  console.log('currentpage', currentPage)
-  console.log('pages', pages)
-  const currentChunk = Math.ceil(currentPage / 10)
-  const lastCHunk = Math.ceil(pages / 10)
-  console.log('currentChunk', currentChunk)
-  console.log('lastCHunk', lastCHunk)
+export function createButtonsValuesList(pages, currentChunk, lastCHunk) {
+  // console.log('currentChunk', currentChunk)
+  // console.log('lastCHunk', lastCHunk)
   let buttonsValues = []
 
   if (pages <= 10) {
@@ -74,22 +71,22 @@ export function createButtonsValues(currentPage, pages) {
     for (let i = 1; i <= pages; i++) {
       buttonsValues.push(i)
     }
-  } else if (currentPage <= 10 && pages > 10) {
+  } else if (currentChunk === 1 && lastCHunk > 1) {
     console.log('test2')
     for (let i = 1; i <= 10; i++) {
       buttonsValues.push(i)
     }
-    buttonsValues.push('+', pages)
-  } else if (currentPage > 10 && currentChunk < lastCHunk) {
+    buttonsValues.push('...', pages)
+  } else if (currentChunk > 1 && currentChunk < lastCHunk) {
     console.log('test3')
-    buttonsValues.push(1, '-')
+    buttonsValues.push(1, '...')
     for (let i = currentChunk * 10 - 9; i <= currentChunk * 10; i++) {
       buttonsValues.push(i)
     }
-    buttonsValues.push('+', pages)
-  } else if (currentPage > 10 && currentChunk === lastCHunk) {
+    buttonsValues.push('...', pages)
+  } else if (currentChunk > 1 && currentChunk === lastCHunk) {
     console.log('test4')
-    buttonsValues.push(1, '-')
+    buttonsValues.push(1, '...')
     for (let i = currentChunk * 10 - 9; i <= pages; i++) {
       buttonsValues.push(i)
     }

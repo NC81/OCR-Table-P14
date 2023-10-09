@@ -39,9 +39,7 @@ describe('Given the data list is empty', () => {
     render(<Table data={[]} columns={mockColumns} />)
 
     await waitFor(() => expect(screen.queryAllByTestId('row').length).toBe(0))
-    expect(
-      screen.getByText('No data available in table...')
-    ).toBeInTheDocument()
+    expect(screen.getByText('No data available in table')).toBeInTheDocument()
   })
 })
 
@@ -296,9 +294,7 @@ describe('Given I type text in search input', () => {
 
       user.type(input, stringToSearch)
       await waitFor(() => expect(screen.queryAllByTestId('row').length).toBe(0))
-      expect(
-        screen.getByText('No matching record found...')
-      ).toBeInTheDocument()
+      expect(screen.getByText('No matching record found')).toBeInTheDocument()
     })
   })
 })
