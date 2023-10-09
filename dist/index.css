@@ -31,12 +31,16 @@
 .table-header {
   cursor: pointer;
   user-select: none;
-  width: max-content;
   color: #616161;
+  white-space: nowrap;
 }
 
 .table-header span {
   margin-right: 4px;
+}
+
+.table-info {
+  line-height: 30px;
 }
 
 .sorted {
@@ -50,11 +54,6 @@
 
 .ascending {
   transform: rotate(180deg);
-}
-
-.body-row:hover > .body-cell {
-  background-color: #1b7575;
-  color: white;
 }
 
 .row-even {
@@ -73,11 +72,6 @@
   background-color: transparent;
   width: 25px;
   padding: 0;
-}
-
-.page-button:hover:not(.page-button-active) {
-  background-color: white;
-  color: black;
 }
 
 .page-button-active {

@@ -1,6 +1,6 @@
 /**
  * Filter list by string typed in search input
- * @param { Array } list Array of objects passed as prop to Table component
+ * @param { Array } list Array of objects representing rows
  * @param { String } string String to be found in objects
  * @returns { Array } Filtered array
  */
@@ -60,7 +60,6 @@ export function sortList(list, key, direction) {
  * @param { Integer } lastCHunk Last chunk of 10 pages
  * @returns { Array } Array of page buttons rendered values
  */
-
 export function createButtonsValuesList(pages, currentChunk, lastCHunk) {
   let buttonsValues = []
 

@@ -2,6 +2,8 @@
 
 This student project is a React Table library converted from this [jQuery plugin](https://github.com/DataTables/DataTables.git).
 
+It's optimized to render data update without re-rendering rows.
+
 ## Technologies
 
 - JS
@@ -58,8 +60,8 @@ Provided you have passed the previous **data** array, you should set your **colu
 ]
 ```
 
-- **key** serves as accessors providing access to data object properties
-- **header** defines corresponding columns titles
+- **key** serves as accessor providing access to data object properties
+- **header** defines corresponding column title
 
 ### Place Table in your App
 
