@@ -1,5 +1,6 @@
 /**
  * Filter list by string typed in search input
+ *
  * @param { Array } list Array of objects representing rows
  * @param { String } string String to be found in objects
  * @returns { Array } Filtered array
@@ -15,6 +16,7 @@ export function filterList(list, string) {
 
 /**
  * Sort list in ascending/descending direction by properties
+ *
  * @param { Array } list Array of objects representing rows
  * @param { String } key Object key whose value is compared
  * @param { String } direction Can be "ascending" or "descending"
@@ -55,6 +57,7 @@ export function sortList(list, key, direction) {
 
 /**
  * Create an array of elements composed of numbers and ellipsis defining page buttons values
+ *
  * @param { Integer } pages Total pages
  * @param { Integer } currentChunk Current chunk of 10 pages
  * @param { Integer } lastCHunk Last chunk of 10 pages

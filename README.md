@@ -2,7 +2,7 @@
 
 This student project is a React Table library converted from this [jQuery plugin](https://github.com/DataTables/DataTables.git).
 
-It's optimized to render data update without re-rendering rows.
+It's optimized to render live data updates without re-rendering rows.
 
 ## Technologies
 
@@ -16,11 +16,12 @@ It's optimized to render data update without re-rendering rows.
 
 ## Features
 
-- Sort (texts, numbers and dates)
+- Columns sorting (texts, numbers and dates)
+- Pagination with corresponding info text
 - Entries selection
-- Pagination with info text
 - Search
-- Good accessibility
+- Deep accessibility
+- Optimized live updates rendering
 
 ## Installation
 
