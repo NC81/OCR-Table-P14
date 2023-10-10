@@ -160,5 +160,5 @@ export default function Table({ data, columns }) {
 
 Table.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-  columns: PropTypes.arrayOf(PropTypes.object.isRequired),
+  columns: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
 }

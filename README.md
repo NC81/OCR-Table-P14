@@ -11,8 +11,7 @@ It's optimized to render live data updates without re-rendering rows.
 
 ## Dependencies
 
-- React
-- PropTypes
+- React ^18.2.0
 
 ## Features
 
